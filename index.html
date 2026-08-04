@@ -1,0 +1,3963 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#12203D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Roteiro NYC">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" href="./icon-192.png">
+<title>Guia NYC — Roteiro</title>
+<style>
+  :root{
+    --paper:#FAFAF6;
+    --paper-dim:#F1EFE7;
+    --ink:#12203D;
+    --ink-soft:#4A5568;
+    --line-grey:#D9D5C7;
+    --mta-orange:#FF6319;
+    --mta-red:#EE352E;
+    --mta-blue:#0039A6;
+    --mta-green:#00933C;
+    --mta-purple:#B933AD;
+    --mta-yellow:#996633;
+    --tip-bg:#FFF6E9;
+    --tip-border:#F0C572;
+    --tip-text:#5C3D0A;
+    --card-bg:#FFFFFF;
+    --optional-bg:#F2F0FA;
+    --optional-border:#B9AEE0;
+    /* Fixed brand surfaces — do NOT change between light/dark mode */
+    --brand-dark:#12203D;
+    --brand-light:#FAFAF6;
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#14161C;
+      --paper-dim:#1E212B;
+      --ink:#F0EFE9;
+      --ink-soft:#9A9EAC;
+      --line-grey:#32343E;
+      --tip-bg:#2A2412;
+      --tip-border:#5C4A1E;
+      --tip-text:#F0D9A0;
+      --card-bg:#1C1E27;
+      --optional-bg:#211E2E;
+      --optional-border:#463C63;
+    }
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding-bottom:calc(60px + env(safe-area-inset-bottom));
+    overscroll-behavior-y:none;
+  }
+
+  .mono{ font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; }
+
+  a{ color:inherit; text-decoration:none; }
+  button{ font:inherit; }
+
+  /* ============ NAV / TOP BAR ============ */
+  .topbar{
+    position:sticky; top:0; z-index:10;
+    background:var(--brand-dark);
+    color:var(--brand-light);
+    padding:calc(10px + env(safe-area-inset-top)) 16px 8px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-height:48px;
+  }
+  .back-btn{
+    background:none; border:none; color:var(--brand-light);
+    font-size:20px; cursor:pointer;
+    width:44px; height:44px;
+    margin-left:-10px;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0.9;
+    border-radius:8px;
+  }
+  .back-btn:active{ background:rgba(250,250,246,0.12); }
+  .topbar-title{
+    font-size:15px; font-weight:600; letter-spacing:0.01em;
+  }
+
+  /* ============ MACRO SCREEN ============ */
+  .macro-header{
+    background:var(--brand-dark);
+    color:var(--brand-light);
+    padding:22px 20px 22px;
+    position:relative;
+  }
+  .macro-eyebrow{
+    font-family:ui-monospace, monospace;
+    font-size:11px; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--mta-orange); margin-bottom:8px;
+    padding-right:48px;
+  }
+  .macro-title{
+    font-size:24px; font-weight:800; line-height:1.15; letter-spacing:-0.01em;
+    padding-right:48px;
+  }
+  .macro-sub{
+    margin-top:6px; font-size:13px; color:rgba(250,250,246,0.65); line-height:1.4;
+    padding-right:48px;
+  }
+  .gastro-nav-btn{
+    position:absolute;
+    top:20px; right:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:40px; height:40px;
+    border:1px solid rgba(250,250,246,0.25);
+    border-radius:50%;
+    background:rgba(250,250,246,0.1);
+    color:var(--brand-light);
+    font-size:18px;
+    cursor:pointer;
+  }
+  .gastro-nav-btn:active{ background:rgba(250,250,246,0.2); }
+
+  .day-list{
+    max-width:640px; margin:0 auto;
+    padding:14px 16px 8px;
+    display:flex; flex-direction:column; gap:8px;
+  }
+
+  .day-card{
+    display:block;
+    background:var(--card-bg);
+    border:1px solid var(--line-grey);
+    border-radius:12px;
+    padding:12px 14px;
+    position:relative;
+    overflow:hidden;
+    cursor:pointer;
+  }
+  .day-card:active{ background:var(--paper-dim); }
+  .day-card::before{
+    content:"";
+    position:absolute; left:0; top:0; bottom:0; width:5px;
+  }
+  .day-card.c1::before{ background:var(--mta-green); }
+  .day-card.c2::before{ background:var(--mta-orange); }
+  .day-card.c3::before{ background:var(--mta-red); }
+  .day-card.c4::before{ background:var(--mta-blue); }
+  .day-card.c5::before{ background:var(--mta-purple); }
+  .day-card.c6::before{ background:var(--mta-yellow); }
+
+  .day-card-top{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
+  }
+  .day-date{
+    font-family:ui-monospace, monospace;
+    font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.05em;
+  }
+  .day-name{
+    font-size:16px; font-weight:700; margin-top:2px; line-height:1.25;
+  }
+  .day-chevron{ font-size:20px; color:var(--ink-soft); margin-top:2px; }
+
+  .meta-stops{ color:#3B82F6 !important; font-weight:600; }
+
+  .landing-nav{
+    max-width:640px; margin:0 auto;
+    padding:20px 16px 8px;
+    display:flex; flex-direction:column; gap:12px;
+  }
+  .landing-card{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background:var(--card-bg);
+    border:1px solid var(--line-grey);
+    border-radius:14px;
+    padding:18px;
+    cursor:pointer;
+  }
+  .landing-card:active{ background:var(--paper-dim); }
+  .landing-card-icon{
+    width:48px; height:48px;
+    border-radius:12px;
+    background:var(--paper-dim);
+    display:flex; align-items:center; justify-content:center;
+    font-size:24px;
+    flex-shrink:0;
+  }
+  .landing-card-text{ flex:1; min-width:0; }
+  .landing-card-title{ font-size:16px; font-weight:700; color:var(--ink); }
+  .landing-card-sub{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; line-height:1.4; }
+
+  .day-meta{
+    display:flex; gap:10px; margin-top:6px; flex-wrap:wrap;
+  }
+  .day-meta span{
+    font-size:12px; color:var(--ink-soft);
+    display:flex; align-items:center; gap:4px;
+  }
+  .badge{
+    display:inline-block; font-size:11px; font-weight:700;
+    padding:2px 8px; border-radius:20px;
+    font-family:ui-monospace, monospace;
+  }
+  .badge.forte{ background:#FDEAE8; color:var(--mta-red); }
+  .badge.muitoforte{ background:var(--brand-dark); color:white; }
+  .badge.moderado{ background:#FFF3DE; color:#8A5A00; }
+  .badge.leve{ background:#E6F6EC; color:var(--mta-green); }
+
+  .status-tag{
+    margin-top:10px;
+    display:inline-block;
+    font-size:11px;
+    font-family:ui-monospace, monospace;
+    padding:3px 8px;
+    border-radius:6px;
+    background:var(--paper-dim);
+    color:var(--ink-soft);
+  }
+  .status-tag.ready{ background:#E6F6EC; color:var(--mta-green); }
+
+  /* ============ DAY DETAIL SCREEN ============ */
+  .day-header{
+    background:var(--brand-dark);
+    color:var(--brand-light);
+    padding:10px 18px 16px;
+  }
+  .day-header-eyebrow{
+    font-family:ui-monospace, monospace;
+    font-size:11px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--mta-orange); margin-bottom:3px;
+  }
+  .day-header h1{
+    font-size:22px; font-weight:800; line-height:1.15;
+  }
+
+  .summary-bar{
+    max-width:640px; margin:0 auto;
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    background:var(--paper-dim);
+    border-bottom:1px solid var(--line-grey);
+  }
+  .summary-item{
+    padding:12px 14px;
+    border-right:1px solid var(--line-grey);
+    border-bottom:none;
+  }
+  .summary-item:nth-child(2n){ border-right:none; }
+  .summary-item:only-child{ grid-column:1 / -1; }
+  .summary-label{
+    font-family:ui-monospace, monospace;
+    font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em;
+    color:var(--ink-soft); margin-bottom:3px;
+  }
+  .summary-value{
+    font-size:14px; font-weight:700;
+  }
+
+  .container{
+    max-width:640px; margin:0 auto; padding:0 16px;
+  }
+
+  .section-title{
+    font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;
+    color:var(--ink-soft);
+    margin:26px 0 14px;
+    display:flex; align-items:center; gap:6px;
+  }
+
+  /* FLOW — grid de 3 colunas: horário (fora do card) | nó | conteúdo */
+  .route{ position:relative; }
+  .route-line{
+    position:absolute;
+    left:calc(16px + 54px + 12px); /* padding + coluna do horário + centro do nó */
+    top:6px; bottom:6px; width:3px;
+    background:var(--mta-orange); border-radius:3px;
+  }
+
+  .tl-row{
+    display:flex;
+    align-items:flex-start;
+    position:relative;
+  }
+
+  .tl-time{
+    flex:0 0 54px;
+    width:54px;
+    text-align:right;
+    font-family:ui-monospace, monospace;
+    font-size:11px;
+    font-weight:700;
+    color:var(--mta-orange);
+    padding-top:14px;
+    padding-right:8px;
+    line-height:1.3;
+  }
+
+  .tl-node{
+    flex:0 0 24px;
+    width:24px;
+    position:relative;
+    display:flex;
+    justify-content:center;
+  }
+  .tl-node .dot{
+    width:16px; height:16px; border-radius:50%;
+    background:var(--brand-dark); border:2px solid var(--brand-dark);
+    margin-top:16px; z-index:2;
+  }
+  .tl-node .dot.hollow{
+    width:14px; height:14px;
+    background:var(--paper); border:2px solid var(--ink-soft);
+    margin-top:12px;
+  }
+
+  .tl-content{
+    flex:1 1 auto;
+    min-width:0;
+  }
+
+  .flow-transit{
+    padding:8px 10px 8px 12px;
+    margin:2px 0 16px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    line-height:1.6;
+    background:var(--paper-dim);
+    border-radius:6px;
+  }
+  .address-chip,
+  .station-chip{
+    display:inline-block;
+    border-radius:5px;
+    padding:1px 5px;
+    font-weight:700;
+    line-height:1.35;
+  }
+  .address-chip{
+    color:var(--brand-dark);
+    background:#FFF0E8;
+    border:1px solid #FFD2BD;
+  }
+  .station-chip{
+    color:var(--mta-blue);
+    background:#EAF1FF;
+    border:1px solid #BED0FA;
+  }
+  .station-inline{
+    color:var(--mta-blue);
+    font-weight:700;
+  }
+  .flow-tip .tip-text{
+    flex:1 1 auto;
+    min-width:0;
+  }
+
+  .flow-stop{
+    background:var(--card-bg);
+    border:1px solid var(--line-grey);
+    border-radius:10px;
+    padding:14px 14px 12px;
+    margin-bottom:16px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .flow-time-label{
+    font-family:ui-monospace, monospace;
+    font-size:10px; font-weight:700;
+    color:var(--mta-orange);
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+  }
+  .duration-tag{
+    display:inline-flex;
+    align-self:flex-start;
+    font-family:ui-monospace, monospace;
+    font-size:11px;
+    font-weight:600;
+    color:var(--ink-soft);
+    background:var(--paper-dim);
+    padding:4px 10px;
+    border-radius:20px;
+  }
+
+  .store-list{
+    display:flex;
+    flex-direction:column;
+    border:1px solid var(--line-grey);
+    border-radius:10px;
+    padding:2px 12px;
+    background:var(--card-bg);
+  }
+
+  .resto-card{
+    background:var(--card-bg);
+    border:1px solid var(--line-grey);
+    border-radius:10px;
+    padding:12px 14px;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .resto-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+  }
+  .resto-name{ font-weight:700; font-size:14px; color:var(--ink); }
+  .resto-desc{ font-size:12.5px; color:var(--ink-soft); line-height:1.5; }
+  .resto-pick{ font-size:12.5px; color:var(--ink); line-height:1.5; }
+  .resto-pick b{ color:var(--mta-orange); font-weight:700; }
+
+  .see-more-link{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    font-size:12px;
+    font-weight:600;
+    color:var(--mta-blue);
+    cursor:pointer;
+    align-self:flex-start;
+  }
+  .see-more-link:active{ opacity:0.7; }
+
+  /* RESTAURANT INFO MODAL — bottom sheet */
+  .modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(18,32,61,0.5);
+    z-index:100;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.25s ease;
+  }
+  .modal-overlay.open{
+    opacity:1;
+    pointer-events:auto;
+  }
+  .modal-sheet{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    max-width:640px;
+    margin:0 auto;
+    background:var(--paper);
+    border-radius:20px 20px 0 0;
+    padding:10px 20px calc(24px + env(safe-area-inset-bottom));
+    max-height:80vh;
+    overflow-y:auto;
+    transform:translateY(100%);
+    transition:transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    box-shadow:0 -8px 30px rgba(18,32,61,0.25);
+  }
+  .modal-overlay.open .modal-sheet{
+    transform:translateY(0);
+  }
+  .modal-handle{
+    width:36px; height:4px;
+    background:var(--line-grey);
+    border-radius:3px;
+    margin:6px auto 14px;
+  }
+  .modal-close{
+    position:absolute;
+    top:14px; right:16px;
+    width:32px; height:32px;
+    border-radius:50%;
+    border:none;
+    background:var(--paper-dim);
+    color:var(--ink-soft);
+    font-size:14px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .modal-close:active{ background:var(--line-grey); }
+  #resto-modal-content .resto-name{ font-size:18px; }
+  .resto-tipo{
+    display:inline-block;
+    font-family:ui-monospace, monospace;
+    font-size:10.5px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--mta-orange);
+    background:var(--tip-bg);
+    border:1px solid var(--tip-border);
+    padding:3px 9px;
+    border-radius:20px;
+    margin:6px 0 8px;
+  }
+  #resto-modal-content .resto-desc{ font-size:13.5px; margin:8px 0; }
+  #resto-modal-content .resto-pick{ font-size:13.5px; }
+  #resto-modal-content .resto-header{ padding-right:36px; }
+
+  .resto-trigger{ cursor:pointer; }
+  .resto-trigger:active{ opacity:0.7; }
+
+  .back-to-top-btn{
+    position:fixed;
+    right:16px;
+    bottom:calc(20px + env(safe-area-inset-bottom));
+    width:44px; height:44px;
+    border-radius:50%;
+    border:none;
+    background:var(--brand-dark);
+    color:var(--brand-light);
+    font-size:18px;
+    font-weight:700;
+    box-shadow:0 6px 20px rgba(18,32,61,0.35);
+    z-index:15;
+    opacity:0;
+    transform:translateY(20px);
+    pointer-events:none;
+    transition:opacity 0.25s ease, transform 0.25s ease;
+    cursor:pointer;
+  }
+  .back-to-top-btn.show{
+    opacity:1;
+    transform:translateY(0);
+    pointer-events:auto;
+  }
+  .back-to-top-btn:active{ background:#0c1830; }
+  .store-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:9px 0;
+    border-bottom:1px dashed var(--line-grey);
+  }
+  .store-row.required{ border-bottom-style:solid; }
+  .store-row:last-child{ border-bottom:none; }
+  .store-info{ min-width:0; display:flex; flex-direction:column; gap:1px; }
+  .store-name{
+    font-size:13.5px;
+    color:var(--ink);
+    font-weight:400;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .store-row.required .store-name{ font-weight:700; }
+  .store-tag{
+    font-family:ui-monospace, monospace;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+  }
+  .store-tag.required{ color:var(--mta-orange); font-weight:700; }
+  .store-tag.optional{ color:var(--ink-soft); }
+  .flow-title{
+    font-size:17px; font-weight:700; line-height:1.2;
+  }
+  .flow-desc{
+    font-size:13.5px; color:var(--ink-soft); line-height:1.5;
+  }
+  .flow-tip{
+    background:var(--tip-bg);
+    border:1px solid var(--tip-border);
+    border-radius:6px;
+    padding:8px 10px;
+    font-size:12.5px;
+    line-height:1.5;
+    color:var(--tip-text);
+    display:flex; gap:6px;
+  }
+  .flow-optional{
+    background:var(--optional-bg);
+    border:1px dashed var(--optional-border);
+    border-radius:10px;
+    padding:12px 14px;
+    margin-bottom:16px;
+    font-size:13.5px;
+    color:var(--ink);
+    line-height:1.5;
+  }
+  .flow-optional b{ display:block; margin-bottom:3px; font-size:14px; }
+
+  .hook{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    background:var(--card-bg);
+    border:1px dashed var(--line-grey);
+    border-radius:8px;
+    padding:13px 12px;
+    min-height:44px;
+    margin:2px 0 16px;
+    font-size:13px;
+    line-height:1.4;
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .hook:active{ background:var(--paper-dim); }
+  .hook .hook-text{ flex:1 1 auto; min-width:0; }
+  .hook .arrow{ color:var(--ink-soft); flex:0 0 auto; white-space:nowrap; font-size:12px; }
+
+  /* OVERVIEW — retrátil, nativo via <details> */
+  .overview-block{
+    background:var(--card-bg);
+    border:1px solid var(--line-grey);
+    border-radius:10px;
+    margin-bottom:8px;
+    overflow:hidden;
+  }
+  .overview-block summary{
+    list-style:none;
+    cursor:pointer;
+    padding:14px 16px;
+    min-height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:14px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .overview-block summary::-webkit-details-marker{ display:none; }
+  .overview-block summary::after{
+    content:"⌄";
+    font-size:18px;
+    color:var(--ink-soft);
+    transition:transform 0.2s ease;
+    margin-left:8px;
+  }
+  .overview-block[open] summary::after{ transform:rotate(180deg); }
+  .overview-block summary:active{ background:var(--paper-dim); }
+
+  .flow-details .route{
+    padding:0 16px 16px;
+  }
+  /* FLUXO DO DIA — uma etapa retrátil por vez */
+  .flow-steps{ display:flex; flex-direction:column; gap:8px; }
+  .flow-step{
+    background:var(--card-bg);
+    border:1px solid var(--line-grey);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  .flow-step summary{
+    list-style:none;
+    cursor:pointer;
+    padding:14px 16px;
+    min-height:48px;
+    display:block;
+    overflow:hidden; /* clearfix para o float interno */
+    font-size:14px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .flow-step summary::-webkit-details-marker{ display:none; }
+  .step-actions{
+    float:right;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-left:8px;
+    margin-top:2px;
+  }
+  .step-chevron{
+    font-size:18px;
+    color:var(--ink-soft);
+    transition:transform .2s ease;
+    display:inline-block;
+    flex-shrink:0;
+  }
+  .flow-step[open] .step-chevron{ transform:rotate(180deg); }
+  .flow-step summary:active{ background:var(--paper-dim); }
+  .flow-step[open]{
+    border-left:3px solid var(--mta-orange);
+  }
+  .flow-step[open] summary{
+    background:var(--paper-dim);
+  }
+
+  .stop-count.route-link{
+    color:var(--mta-blue);
+    background:#EAF1FF;
+    border:1px solid #BED0FA;
+    text-decoration:none;
+  }
+  .stop-count.route-link:active{ background:#D9E7FF; }
+
+  .maps-icon-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:24px; height:24px;
+    border-radius:50%;
+    background:#EAF1FF;
+    border:1px solid #BED0FA;
+    color:var(--mta-blue);
+    font-size:12px;
+    flex-shrink:0;
+  }
+  .maps-icon-btn:active{ background:#D9E7FF; }
+
+  .ig-icon-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:24px; height:24px;
+    border-radius:50%;
+    background:#FCE9F1;
+    border:1px solid #F3B8D3;
+    color:#C2185B;
+    font-size:12px;
+    flex-shrink:0;
+    margin-left:6px;
+  }
+  .ig-icon-btn:active{ background:#F9D3E3; }
+  .gastro-row-actions{ display:flex; align-items:center; flex-shrink:0; }
+  .flow-step-body{
+    padding:12px 16px 16px;
+    border-top:1px solid var(--paper-dim);
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .flow-step-body .route{ padding:0; }
+  .flow-step-body .flow-stop,
+  .flow-step-body .flow-transit,
+  .flow-step-body .hook,
+  .flow-step-body .flow-optional{ margin:0; }
+  .flow-day-header{
+    padding:14px 16px;
+    min-height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:14px;
+    font-weight:700;
+    color:var(--ink);
+    border-bottom:1px solid var(--paper-dim);
+  }
+  .flow-day-header .stop-count{
+    font-family:ui-monospace, monospace;
+    font-size:11px;
+    font-weight:600;
+    color:var(--ink-soft);
+    background:var(--paper-dim);
+    padding:2px 8px;
+    border-radius:10px;
+    margin-left:8px;
+  }
+  .section-title .stop-count{
+    font-family:ui-monospace, monospace;
+    font-size:11px;
+    font-weight:600;
+    color:var(--ink-soft);
+    background:var(--paper-dim);
+    padding:2px 8px;
+    border-radius:10px;
+    margin-left:4px;
+    text-transform:none;
+    letter-spacing:normal;
+  }
+  .step-summary{ display:block; }
+  .step-summary strong{ font-size:15px; }
+  .step-summary span{
+    color:var(--ink-soft);
+    font-size:13px;
+    font-weight:400;
+    line-height:1.35;
+  }
+  .step-summary .address-chip,
+  .step-summary .station-chip{
+    font-size:12px;
+    font-weight:700;
+  }
+  .step-summary .address-chip{ color:var(--brand-dark); }
+  .step-summary .station-chip{ color:var(--mta-blue); }
+  /* No celular, a timeline fica à esquerda e o card ocupa quase toda a tela. */
+  .flow-section .tl-time{
+    display:none;
+  }
+  .flow-section .tl-node{
+    flex:0 0 24px;
+    width:24px;
+    transform:translateX(-6px);
+    align-self:stretch;
+    align-items:center;
+  }
+  .flow-section .tl-node .dot,
+  .flow-section .tl-node .dot.hollow{
+    margin-top:0;
+  }
+  .flow-section .route-line{
+    left:4.5px; /* centro do nó (6px) menos metade da largura da linha (1.5px) */
+  }
+  .step-summary .step-time{
+    display:block;
+    color:var(--mta-orange);
+    font-family:ui-monospace, monospace;
+    font-size:12px;
+    font-weight:700;
+    line-height:1.2;
+    margin-bottom:4px;
+  }
+  .next-step{
+    margin-top:12px;
+    padding-top:12px;
+    border-top:1px solid var(--paper-dim);
+    color:var(--ink-soft);
+    font-size:13px;
+    line-height:1.45;
+  }
+  .next-step b{ color:var(--ink); }
+  .flow-details summary .stop-count{
+    font-family:ui-monospace, monospace;
+    font-size:11px;
+    font-weight:600;
+    color:var(--ink-soft);
+    background:var(--paper-dim);
+    padding:2px 8px;
+    border-radius:10px;
+  }
+  .flow-details summary .summary-title-group{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .overview-list{
+    list-style:none;
+    padding:0 16px 14px;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+  .overview-list li{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    padding:7px 0;
+    border-top:1px solid var(--paper-dim);
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+  }
+  .overview-list li:first-child{ border-top:none; }
+  .overview-list .ov-name{ color:var(--ink); font-weight:600; }
+
+  /* SIMPLE SECTIONS (gastronomia, extras, obs) */
+  .simple-section{
+    background:var(--card-bg);
+    border:1px solid var(--line-grey);
+    border-radius:10px;
+    padding:16px;
+    margin-bottom:16px;
+  }
+  .placeholder-note{
+    font-size:13px; font-style:italic; color:var(--ink-soft);
+    padding:10px 0;
+  }
+  .obs-list{ list-style:none; }
+  .obs-list li{
+    font-size:13.5px; line-height:1.6; color:var(--ink);
+    padding:8px 0; border-bottom:1px solid var(--paper-dim);
+  }
+  .obs-list li:last-child{ border-bottom:none; }
+  .gastro-block{
+    font-size:13.5px;
+    color:var(--ink);
+    line-height:1.6;
+  }
+  .gastro-block b{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+    color:var(--ink-soft);
+    font-weight:700;
+  }
+
+  /* EMPTY DAY PLACEHOLDER */
+  .empty-day{
+    text-align:center;
+    padding:60px 24px;
+    color:var(--ink-soft);
+  }
+  .empty-day .icon{ font-size:36px; margin-bottom:14px; }
+  .empty-day p{ font-size:14px; line-height:1.6; max-width:320px; margin:0 auto; }
+
+  footer.spacer{ height:20px; }
+
+  /* Focus visible for keyboard/a11y */
+  [role="button"]:focus-visible{
+    outline:2px solid var(--mta-orange);
+    outline-offset:2px;
+  }
+
+  /* Return-to-flow chip */
+  .return-chip{
+    position:fixed;
+    left:50%;
+    bottom:calc(20px + env(safe-area-inset-bottom));
+    transform:translateX(-50%) translateY(80px);
+    background:var(--brand-dark);
+    color:var(--brand-light);
+    padding:11px 18px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:600;
+    box-shadow:0 6px 20px rgba(18,32,61,0.35);
+    z-index:20;
+    opacity:0;
+    pointer-events:none;
+    transition:transform 0.25s ease, opacity 0.25s ease;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .return-chip.show{
+    transform:translateX(-50%) translateY(0);
+    opacity:1;
+    pointer-events:auto;
+  }
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<button id="back-to-top-btn" class="back-to-top-btn" aria-label="Voltar ao topo">↑</button>
+
+<div class="modal-overlay" id="resto-modal-overlay">
+  <div class="modal-sheet" id="resto-modal-sheet">
+    <div class="modal-handle"></div>
+    <button class="modal-close" id="resto-modal-close" aria-label="Fechar">✕</button>
+    <div id="resto-modal-content"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   PWA SETUP — registra o Service Worker (manifest.json e ícones
+   agora são arquivos estáticos, referenciados direto no <head>)
+   ============================================================ */
+(function setupPWA(){
+  // Service Worker — funciona só quando hospedado via https (Netlify, etc.);
+  // se aberto como arquivo local, falha silenciosamente sem quebrar nada.
+  if("serviceWorker" in navigator){
+    navigator.serviceWorker.register("./sw.js").catch(() => {
+      // Sem problema — provavelmente aberto como arquivo local (file://),
+      // onde Service Worker não é suportado pelo navegador.
+    });
+  }
+})();
+</script>
+<script>
+/* ============================================================
+   DATA
+   ============================================================ */
+/* ============================================================
+   RESTAURANT INFO MODAL — banco de dados + lógica
+   ============================================================ */
+const RESTO_DB = {
+  "remi": {
+    name: "☕ Remi Flower & Coffee",
+    categoria: "Café",
+    dia: 4,
+    regiao: "Midtown East · Lexington Ave",
+    tipo: "Café & Floricultura",
+    desc: "Uma cafeteria-floricultura ao mesmo tempo — você pede o café cercado de vasos e buquês frescos, num clima aconchegante e bem fotogênico.",
+    pickLabel: "Vale pedir",
+    pick: "Flat White, Latte, Croissant ou Pain au Chocolat.",
+    dica: "Espaço pequeno — se estiver cheio, considere pegar para levar.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.753691,-73.9690791&query_place_id=ChIJY4SOj-JYwokRRSfg82cBwM0",
+    igUrl: "https://www.instagram.com/remi.nyc/"
+  },
+  "urbanspace": {
+    name: "🍔 UrbanSpace Vanderbilt",
+    categoria: "Food Hall",
+    dia: 4,
+    regiao: "Midtown · Grand Central",
+    tipo: "Food Hall (várias culinárias)",
+    desc: "Food hall badalado dentro do complexo Pershing Square, colado na Grand Central — dezenas de bancas incluindo hambúrguer, comida asiática, mexicana e saladas, ótimo pra quem está em grupo com gostos diferentes.",
+    pickLabel: "Vale escolher",
+    pick: "Conforme a vontade do dia (hambúrguer, asiático, mexicano, saladas e outras opções).",
+    dica: "Muitas opções ao mesmo tempo — bom para grupo com gostos diferentes decidir rápido, sem debate.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.7543604,-73.9761919&query_place_id=ChIJXSh7-f1YwokR5MTjegK5cGQ",
+    igUrl: "https://www.instagram.com/vanderbiltmarketnyc/"
+  },
+  "obao": {
+    name: "🥢 OBAO",
+    categoria: "Restaurante",
+    dia: 4,
+    regiao: "Hell's Kitchen",
+    tipo: "Tailandês &amp; Vietnamita",
+    desc: "Cantinho asiático despretensioso e aconchegante em Hell's Kitchen, com pratos tailandeses e vietnamitas generosos — boa pedida pra um jantar sem pressa antes do teatro.",
+    pickLabel: "Vale pedir",
+    pick: "Pad Thai, Pho, Baos ou Curry.",
+    dica: "Ambiente tranquilo, sem pressa — bom para conversar antes do teatro.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.7606458,-73.9913281&query_place_id=ChIJQZko0FNYwokRjhh4z0ilUMw",
+    igUrl: "https://www.instagram.com/obao_ny/"
+  },
+  "juniors": {
+    name: "🍰 Junior's Restaurant",
+    categoria: "Restaurante",
+    dia: 4,
+    regiao: "Times Square",
+    tipo: "Diner Americano",
+    desc: "Instituição nova-iorquina desde 1950 (originalmente do Brooklyn), conhecida por servir um dos cheesecakes mais famosos da cidade num salão clássico de diner americano.",
+    pickLabel: "Vale pedir",
+    pick: "Original New York Cheesecake, Pastrami Reuben ou Chicken Pot Pie.",
+    dica: "Porções generosas — uma fatia de cheesecake já costuma render sobremesa para duas pessoas.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.7583331,-73.9866367&query_place_id=ChIJv8YTWFRYwokRkTUSNDg04Y4",
+    igUrl: "https://www.instagram.com/juniorscheesecake/"
+  },
+  "lostacos": {
+    name: "🌮 Los Tacos No. 1",
+    categoria: "Restaurante",
+    dia: 2,
+    regiao: "Grand Central Market",
+    tipo: "Tacos Mexicanos",
+    desc: "Balcão de rua estilo Baja California que virou fenômeno em Nova York — a fila costuma andar rápido, e o cheiro de tortilha na chapa já anima só de passar perto.",
+    pickLabel: "Vale pedir",
+    pick: "Adobada (porco marinado), Carne Asada ou Pollo Asado. Não deixe de experimentar as salsas da casa.",
+    dica: "Só balcão, sem mesas — coma em pé ou leve para passear pela região.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.751501,-73.9777457&query_place_id=ChIJV2ahN11ZwokRCtz856h7EcQ",
+    igUrl: "https://www.instagram.com/lostacos1/"
+  },
+  "leonsbagels": {
+    name: "🥯 Leon's Bagels",
+    categoria: "Padaria",
+    dia: 3,
+    regiao: "Nolita",
+    tipo: "Bagel Shop",
+    desc: "Bagels feitos na hora, com casca crocante e miolo macio — um clássico café da manhã nova-iorquino, sem luxo, só ingrediente de qualidade.",
+    pickLabel: "Vale pedir",
+    pick: "Everything Bagel com Scallion Cream Cheese ou o Bacon, Egg &amp; Cheese.",
+    dica: "Fila pode formar no horário de pico da manhã, mas costuma andar rápido.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.7208784,-73.9968333&query_place_id=ChIJKQWE8UZZwokRUFB32gGhH-Q",
+    igUrl: "https://www.instagram.com/leonsbagelsnyc/"
+  },
+  "katz": {
+    name: "🥪 Katz's Delicatessen",
+    categoria: "Restaurante",
+    dia: 3,
+    regiao: "Lower East Side",
+    tipo: "Delicatessen Judaica",
+    desc: "A delicatessen judaica mais famosa do mundo, aberta desde 1888 — pastrami fatiado na hora, ambiente barulhento e cenário real da cena de \'Harry e Sally\'.",
+    pickLabel: "Vale pedir",
+    pick: "Pastrami Sandwich no Rye Bread, Half Sour Pickles e Dr. Brown's Black Cherry Soda.",
+    dica: "Pegue o bilhete de papel na entrada e não perca — precisa dele pra pagar e sair. Preço é por peso, pode surpreender quem não está acostumado.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.722233,-73.987429&query_place_id=ChIJCar0f49ZwokR6ozLV-dHNTE",
+    igUrl: "https://www.instagram.com/katzsdeli/"
+  },
+  "meilaiwah": {
+    name: "🥟 Mei Lai Wah",
+    categoria: "Padaria",
+    dia: 3,
+    regiao: "Chinatown",
+    tipo: "Padaria Chinesa",
+    desc: "Padaria tradicional do Chinatown, discreta por fora e concorrida por dentro — os pork buns saem quentinhos do forno e têm fila de moradores locais, não só de turista.",
+    pickLabel: "Vale pedir",
+    pick: "Roast Pork Bun (carro-chefe da casa), Pineapple Bun ou Egg Tart.",
+    dica: "Costuma ser só dinheiro (cash) — vale checar antes. Preço bem em conta.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.7151726,-73.9989063&query_place_id=ChIJM3elBidawokRJKPC55N6pQI",
+    igUrl: "https://www.instagram.com/meilaiwahcoffeeshop/"
+  },
+  "bluebottle": {
+    name: "☕ Blue Bottle Coffee",
+    categoria: "Café",
+    dia: 2,
+    regiao: "Midtown · 6th Ave",
+    tipo: "Café de Especialidade",
+    desc: "Uma das pioneiras do café de especialidade nos EUA, com visual minimalista e torra impecável — parada rápida e certeira pra recarregar energia.",
+    pickLabel: "Vale pedir",
+    pick: "Drip Coffee (Batch Brew), New Orleans-Style Iced Coffee ou Cold Brew, acompanhado de um Liege Waffle ou Almond Croissant.",
+    dica: "Fila costuma andar rápido; poucos lugares para sentar.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.7630255,-73.9789147&query_place_id=ChIJAezVTMRZwokR9upQKsvI0H0",
+    igUrl: "https://www.instagram.com/bluebottle/"
+  },
+  "sipandco": {
+    name: "☕ Sip &amp; Co.",
+    categoria: "Café",
+    dia: 0,
+    regiao: "Midtown (não utilizado)",
+    tipo: "Café",
+    desc: "Cafeteria despretensiosa perto da 5ª Avenida, boa opção pra uma pausa rápida sem sair muito da rota.",
+    pickLabel: "Vale pedir",
+    pick: "Flat White, Cappuccino, Iced Latte ou um dos pastries artesanais da vitrine.",
+    dica: "Espaço pequeno, bom para uma pausa rápida sem desviar muito da rota.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.7647538,-73.9758633&query_place_id=ChIJK4Gklg1ZwokRmDGLQSxEaUI",
+    igUrl: "https://www.instagram.com/sipandco.co/"
+  },
+  "hamburgeramerica": {
+    name: "🍔 Hamburger America",
+    categoria: "Restaurante",
+    dia: 2,
+    regiao: "SoHo · Houston St",
+    tipo: "Hambúrguer Clássico Americano",
+    desc: "Criada por George Motz, autoridade em hambúrguer clássico americano — cardápio enxuto, focado no smash burger perfeito, sem frescura.",
+    pickLabel: "Vale pedir",
+    pick: "Classic Fried Onion Burger (carro-chefe da casa), Cheeseburger e uma porção de Pie Fries.",
+    dica: "Cardápio enxuto e objetivo — ótimo para quem quer decidir rápido e comer bem.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.7280142,-74.0025767&query_place_id=ChIJF8menphZwokR09y2oKUn8HQ",
+    igUrl: "https://www.instagram.com/hamburgeramerica/"
+  },
+  "frauncestavern": {
+    name: "🍽️ Fraunces Tavern",
+    categoria: "Restaurante",
+    dia: 5,
+    regiao: "Financial District",
+    tipo: "Taverna Histórica &amp; Gastropub",
+    desc: "A taverna mais antiga de Manhattan (1762) — foi ali que George Washington se despediu das tropas depois da Guerra da Independência. Hoje funciona como restaurante e museu ao mesmo tempo.",
+    pickLabel: "Vale pedir",
+    pick: "Fish & Chips, Shepherd's Pie ou o Burger da Casa.",
+    dica: "Vale reservar com antecedência, principalmente no jantar — é ponto turístico além de restaurante.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.7034181,-74.0113649&query_place_id=ChIJn-PPbBRawokR3o5lQeBaB_w",
+    igUrl: "https://www.google.com/search?q=Fraunces+Tavern+instagram"
+  },
+  "deadrabbit": {
+    name: "🍺 The Dead Rabbit",
+    categoria: "Bar",
+    dia: 5,
+    regiao: "Financial District",
+    tipo: "Pub Irlandês &amp; Coquetelaria",
+    desc: "Pub premiado várias vezes como um dos melhores bares do mundo, com tema inspirado nas gangues irlandesas do FiDi do século 19 — coquetéis autorais e ambiente animado.",
+    pickLabel: "Vale pedir",
+    pick: "Irish Coffee, coquetéis autorais ou uma dúzia de ostras.",
+    dica: "Costuma lotar no fim da tarde — chegar cedo garante lugar mais tranquilo.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.7032685,-74.0110218&query_place_id=ChIJIRiJaRRawokR2KyQ984qa-o",
+    igUrl: "https://www.google.com/search?q=The+Dead+Rabbit+NYC+instagram"
+  },
+  "harrysside": {
+    name: "🦪 Harry's Side Bar",
+    categoria: "Bar",
+    dia: 5,
+    regiao: "Financial District",
+    tipo: "Wine Bar &amp; Petiscos",
+    desc: "Clássico discreto do Financial District, favorito de quem trabalha na região — boa carta de vinhos, petiscos e clima de happy hour de verdade.",
+    pickLabel: "Vale pedir",
+    pick: "Martinis, steak frites e ostras.",
+    dica: "Boa opção para happy hour tranquilo, menos concorrido que os vizinhos mais famosos.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.7044966,-74.0098862&query_place_id=ChIJTXXOF-1bwokRmT5WZCpK8EU",
+    igUrl: "https://www.google.com/search?q=Harry%27s+Side+Bar+NYC+instagram"
+  },
+  "lobsterplace": {
+    name: "🦞 Lobster Place",
+    categoria: "Restaurante",
+    dia: 6,
+    regiao: "Chelsea Market",
+    tipo: "Frutos do Mar",
+    desc: "Peixaria badalada dentro do Chelsea Market — dica de quem já foi: entre pelo lado da High Line pra pular a multidão do corredor principal do mercado.",
+    pickLabel: "Vale pedir",
+    pick: "Lobster Roll ou Oyster Bar.",
+    dica: "Preços salgados (o lobster roll passa de US$30), mas o frescor justifica.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.742553,-74.006052&query_place_id=ChIJw2lMFL9ZwokRXmhKDX7Chxs",
+    igUrl: "https://www.instagram.com/lobsterplacenyc/"
+  },
+  "friedmans": {
+    name: "🔄 Friedman's",
+    categoria: "Restaurante",
+    dia: 6,
+    regiao: "Chelsea Market",
+    tipo: "Comfort Food Americana",
+    desc: "Restaurante sentado dentro do Chelsea Market, com cardápio grande e boas opções sem glúten — daquele tipo de lugar que agrada todo mundo da mesa.",
+    pickLabel: "Vale pedir",
+    pick: "Fried Chicken Sandwich, Cheeseburger, Fish &amp; Chips, saladas ou brunch.",
+    dica: "Boa opção para quem tem restrição alimentar — cardápio com bastante opção sem glúten.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.742693,-74.0062283&query_place_id=ChIJw2lMFL9ZwokRyO_5o2VT8os",
+    igUrl: "https://www.instagram.com/friedmansnyc/"
+  },
+  "magnoliabakery": {
+    name: "🧁 Magnolia Bakery",
+    categoria: "Sobremesa",
+    dia: 6,
+    regiao: "West Village",
+    tipo: "Confeitaria &amp; Doces",
+    desc: "A confeitaria original que virou ícone depois de aparecer em \'Sex and the City\' — antes disso já era referência no West Village pelo banana pudding caseiro.",
+    pickLabel: "Vale pedir",
+    pick: "Banana Pudding ou um cupcake clássico de baunilha.",
+    dica: "Fila quase sempre pra fora da loja, mas anda rápido — é questão de minutos.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.7358946,-74.00491&query_place_id=ChIJF9Du35RZwokRFGd0oc4diZs",
+    igUrl: "https://www.instagram.com/magnoliabakery/"
+  },
+  "lindustriewv": {
+    name: "🍕 L'Industrie Pizzeria — West Village",
+    categoria: "Restaurante",
+    dia: 6,
+    regiao: "West Village",
+    tipo: "Pizza por Fatia",
+    desc: "Unidade mais nova do L\'Industrie, com fila que anda rápido e pizza de fermentação longa que já rendeu fama nacional — vale enfrentar os poucos minutos de espera.",
+    pickLabel: "Vale pedir",
+    pick: "Burrata Slice, Fig Jam &amp; Bacon Slice ou Pepperoni.",
+    dica: "Fila comum no horário de pico, mas anda rápido — pizza inteira costuma sair mais em conta que fatias avulsas.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.7332224,-74.0049081&query_place_id=ChIJ92OsaJVZwokRsC54kf-J-3g",
+    igUrl: "https://www.instagram.com/lindustrielt/"
+  }
+};
+
+const IG_ICON_SVG = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="6"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none"></circle></svg>';
+
+function openRestoModal(key){
+  const data = RESTO_DB[key];
+  if(!data) return;
+  const content = document.getElementById("resto-modal-content");
+  content.innerHTML = `
+    <div class="resto-header">
+      <span class="resto-name">${data.name}</span>
+      <span class="gastro-row-actions">
+        <a class="maps-icon-btn" href="${data.mapsUrl}" target="_blank" rel="noopener">📍</a>
+        <a class="ig-icon-btn" href="${data.igUrl}" target="_blank" rel="noopener">${IG_ICON_SVG}</a>
+      </span>
+    </div>
+    ${data.tipo ? `<div class="resto-tipo">${data.tipo}</div>` : ""}
+    <div class="resto-desc">${data.desc}</div>
+    <div class="resto-pick"><b>${data.pickLabel}:</b> ${data.pick}</div>
+    ${data.dica ? `<div class="flow-tip"><span>💡</span><span class="tip-text">${data.dica}</span></div>` : ""}
+  `;
+  document.getElementById("resto-modal-overlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeRestoModal(){
+  document.getElementById("resto-modal-overlay").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+/* ============================================================
+   ATRAÇÕES — categorização + modal (reaproveita STEPS_BY_DAY)
+   ============================================================ */
+const CATEGORY_BY_KEY = {
+  // Museus & Cultura
+  amnh: "Museus & Cultura", nypl: "Museus & Cultura",
+  // Parques & Natureza
+  belvedere: "Parques & Natureza", strawberry: "Parques & Natureza",
+  bowbridge: "Parques & Natureza", bethesda: "Parques & Natureza",
+  mall: "Parques & Natureza", bryantpark: "Parques & Natureza",
+  rooseveltisland: "Parques & Natureza", highline: "Parques & Natureza",
+  washingtonsquare: "Parques & Natureza",
+  // Mirantes & Arquitetura
+  empire: "Mirantes & Arquitetura", oculus: "Mirantes & Arquitetura",
+  summit: "Mirantes & Arquitetura", vessel: "Mirantes & Arquitetura",
+  // Marcos Históricos
+  stpatricks: "Marcos Históricos", rockefeller: "Marcos Históricos",
+  grandcentral: "Marcos Históricos", memorial911: "Marcos Históricos",
+  brooklynbridge: "Marcos Históricos", timessquare: "Marcos Históricos",
+  liberty: "Marcos Históricos", wallstreet: "Marcos Históricos",
+  // Bairros para Explorar
+  fifthave: "Bairros para Explorar", soho: "Bairros para Explorar",
+  chinatown: "Bairros para Explorar", dumbo: "Bairros para Explorar",
+  seaport: "Bairros para Explorar", chelseamarket: "Bairros para Explorar",
+  meatpacking: "Bairros para Explorar", westvillage: "Bairros para Explorar",
+  // Experiências & Entretenimento
+  tram: "Experiências & Entretenimento", theater: "Experiências & Entretenimento"
+};
+
+const ATTRACTIONS_DB = {
+  stpatricks: { desc:"Principal catedral católica de Nova York e um dos edifícios neogóticos mais icônicos da cidade.", dica:"A entrada é gratuita e o interior impressiona pelo contraste com os arranha-céus da 5ª Avenida.", admissao:"🆓 Entrada gratuita" },
+  rockefeller: { desc:"Complexo art déco conhecido pela estátua de Prometeu, pelos estúdios da NBC e pela pista de patinação no inverno.", dica:"Vale entrar rapidamente no lobby do 30 Rockefeller Plaza e visitar as lojas da praça.", admissao:"🆓 Entrada gratuita" },
+  grandcentral: { desc:"Estação histórica famosa pelo teto constelar do Main Concourse e pela arquitetura Beaux-Arts.", dica:"Não deixe de conhecer a Whispering Gallery ao lado do Oyster Bar.", admissao:"🆓 Entrada gratuita" },
+  memorial911: { desc:"Memorial construído no local das antigas Torres Gêmeas, com duas piscinas monumentais e os nomes das vítimas gravados em bronze.", dica:"Reserve um momento para conhecer a Survivor Tree, símbolo de resiliência após os atentados.", admissao:"🆓 Memorial gratuito | 🎟️ Museu com ingresso opcional" },
+  brooklynbridge: { desc:"Ponte inaugurada em 1883, ligando Manhattan ao Brooklyn com uma das caminhadas mais famosas da cidade.", dica:"Caminhe pelo tablado elevado para aproveitar as melhores vistas do skyline.", admissao:"🆓 Entrada gratuita" },
+  timessquare: { desc:"O cruzamento mais famoso de Nova York, conhecido pelos enormes painéis de LED e pela atmosfera vibrante.", dica:"A escadaria vermelha da TKTS oferece uma das melhores vistas da praça.", admissao:"🆓 Entrada gratuita" },
+  liberty: { desc:"Passeio de barco até dois dos maiores símbolos da história americana: a Estátua da Liberdade e o Museu da Imigração.", dica:"Reserve cerca de 3 a 4 horas para visitar as duas ilhas com tranquilidade.", admissao:"🎟️ Ingresso obrigatório (Statue City Cruises)" },
+  wallstreet: { desc:"Percurso pelos principais marcos financeiros e históricos de Nova York, incluindo o Charging Bull, NYSE, Federal Hall e Trinity Church.", dica:"Todo o circuito pode ser feito a pé em aproximadamente 1 hora.", admissao:"🆓 Entrada gratuita" },
+  amnh: { desc:"Um dos maiores museus de história natural do mundo, com fósseis, dinossauros e exposições interativas.", dica:"Reserve ao menos 3 horas para explorar os principais salões.", admissao:"🎟️ Ingresso obrigatório" },
+  nypl: { desc:"Uma das bibliotecas mais bonitas dos Estados Unidos, famosa pelo Rose Main Reading Room.", dica:"A visita costuma levar cerca de 30 minutos.", admissao:"🆓 Entrada gratuita" },
+  empire: { desc:"Um dos observatórios mais famosos do mundo, com vista panorâmica de Manhattan.", dica:"O primeiro horário da manhã costuma ser o mais tranquilo.", admissao:"🎟️ Ingresso obrigatório" },
+  oculus: { desc:"Estação e centro comercial projetados por Santiago Calatrava, símbolo da reconstrução do World Trade Center.", dica:"Vale a visita pela arquitetura e pelo enorme salão branco.", admissao:"🆓 Entrada gratuita" },
+  summit: { desc:"Observatório imersivo que combina espelhos, instalações artísticas e uma das vistas mais impressionantes da cidade.", dica:"Leve óculos de sol: o reflexo nos espelhos pode ser intenso.", admissao:"🎟️ Ingresso obrigatório" },
+  vessel: { desc:"Estrutura arquitetônica futurista formada por 154 escadarias interligadas em Hudson Yards.", dica:"A praça é gratuita e rende ótimas fotos mesmo sem subir — hoje não é mais possível chegar ao topo.", admissao:"🆓 Área externa gratuita | 🎟️ Ingresso para subir (opcional)" },
+  belvedere: { desc:"Castelo vitoriano localizado no ponto mais alto do Central Park.", dica:"Um dos melhores mirantes para observar o Turtle Pond e o Great Lawn.", admissao:"🆓 Entrada gratuita" },
+  strawberry: { desc:"Memorial dedicado a John Lennon, localizado em frente ao edifício Dakota.", dica:"Procure o mosaico \"Imagine\", frequentemente decorado pelos visitantes.", admissao:"🆓 Entrada gratuita" },
+  bowbridge: { desc:"Elegante ponte de ferro fundido e um dos cenários mais fotografados do Central Park.", dica:"Excelente ponto para fotos do lago e do skyline do parque.", admissao:"🆓 Entrada gratuita" },
+  bethesda: { desc:"Considerado o coração arquitetônico do Central Park.", dica:"Vale observar os músicos e artistas que costumam se apresentar no terraço.", admissao:"🆓 Entrada gratuita" },
+  mall: { desc:"Alameda clássica cercada por olmos americanos e cenário frequente de filmes.", dica:"Um dos passeios mais agradáveis do parque.", admissao:"🆓 Entrada gratuita" },
+  bryantpark: { desc:"Parque urbano cercado por arranha-céus, perfeito para uma pausa durante o roteiro.", dica:"Ótimo lugar para descansar ou fazer um lanche rápido.", admissao:"🆓 Entrada gratuita" },
+  rooseveltisland: { desc:"Ilha tranquila no East River com belas vistas do skyline de Manhattan.", dica:"Caminhe pela orla sul da ilha para uma das melhores panorâmicas da cidade — o Four Freedoms Park fecha às terças, mas o calçadão oferece a mesma vista.", admissao:"🆓 Entrada gratuita" },
+  highline: { desc:"Parque suspenso construído sobre uma antiga ferrovia elevada, combinando jardins, arte e arquitetura.", dica:"Percorra o trajeto no sentido norte → sul para terminar no Chelsea Market.", admissao:"🆓 Entrada gratuita" },
+  washingtonsquare: { desc:"Praça mais famosa de Greenwich Village, conhecida pelo arco monumental e pela atmosfera universitária.", dica:"Um ótimo lugar para descansar e observar músicos de rua e artistas locais.", admissao:"🆓 Entrada gratuita" },
+  fifthave: { desc:"A avenida de compras mais famosa de Nova York, reunindo lojas icônicas e edifícios históricos.", dica:"O trecho entre a Apple e o Rockefeller concentra as principais atrações.", admissao:"🆓 Entrada gratuita" },
+  soho: { desc:"Bairro conhecido pelas fachadas de ferro fundido, galerias, boutiques e brechós de luxo.", dica:"Aproveite para caminhar pelas ruas Prince, Spring, Mercer e Wooster.", admissao:"🆓 Entrada gratuita" },
+  chinatown: { desc:"Maior bairro chinês de Nova York, repleto de mercados, padarias e restaurantes tradicionais.", dica:"Explore ruas como Doyers Street, Pell Street e Mott Street.", admissao:"🆓 Entrada gratuita" },
+  dumbo: { desc:"Região às margens do East River com vistas icônicas da Manhattan Bridge e do skyline.", dica:"Caminhe até a Pebble Beach para uma das fotos mais famosas da cidade.", admissao:"🆓 Entrada gratuita" },
+  seaport: { desc:"Distrito histórico revitalizado com calçadão, restaurantes e vista privilegiada da Ponte do Brooklyn.", dica:"Excelente lugar para um happy hour no fim da tarde.", admissao:"🆓 Entrada gratuita" },
+  chelseamarket: { desc:"Mercado gastronômico instalado na antiga fábrica da Nabisco, reunindo restaurantes e lojas especializadas.", dica:"Ótimo lugar para almoçar e explorar sem pressa.", admissao:"🆓 Entrada gratuita" },
+  meatpacking: { desc:"Antiga região industrial transformada em um polo de gastronomia, moda e arquitetura contemporânea.", dica:"Aproveite para visitar o Little Island e caminhar pelas ruas do bairro.", admissao:"🆓 Entrada gratuita" },
+  westvillage: { desc:"Um dos bairros mais charmosos de Manhattan, com ruas arborizadas, brownstones e cafés tradicionais.", dica:"Caminhe sem pressa pela Bleecker Street e pelas ruas residenciais do bairro.", admissao:"🆓 Entrada gratuita" },
+  tram: { desc:"Bonde aéreo histórico que cruza o East River oferecendo uma perspectiva única do skyline de Midtown.", dica:"A travessia dura cerca de 4 minutos.", admissao:"💳 Incluso na tarifa do metrô (OMNY)" },
+  theater: { desc:"Espetáculo musical inspirado no clássico da Disney, apresentado em um dos teatros mais tradicionais da Broadway.", dica:"Chegue com 30 minutos de antecedência para passar pela segurança e encontrar seu assento.", admissao:"🎟️ Ingresso obrigatório" }
+};
+
+function getAttractionsList(){
+  const skipKeys = new Set(["hotel-out", "hotel-back", "cafe", "almoco", "jantar", "hotelbreak"]);
+  const list = [];
+  const seen = new Set();
+  Object.keys(STEPS_BY_DAY).forEach(dayId => {
+    STEPS_BY_DAY[dayId].forEach(s => {
+      if(skipKeys.has(s.key) || s.node !== "solid" || seen.has(s.key)) return;
+      seen.add(s.key);
+      const extra = ATTRACTIONS_DB[s.key] || {};
+      list.push({
+        key: s.key,
+        name: s.name,
+        desc: s.description,
+        fullDesc: extra.desc || s.description,
+        dica: extra.dica || "",
+        admissao: extra.admissao || "",
+        categoria: CATEGORY_BY_KEY[s.key] || "Outros",
+        mapsUrl: s.map ? mapsPlaceUrl(s.map) : null
+      });
+    });
+  });
+  return list;
+}
+
+function openAttractionModal(key){
+  const data = getAttractionsList().find(a => a.key === key);
+  if(!data) return;
+  const content = document.getElementById("resto-modal-content");
+  content.innerHTML = `
+    <div class="resto-header">
+      <span class="resto-name">${data.name}</span>
+      ${data.mapsUrl ? `<span class="gastro-row-actions"><a class="maps-icon-btn" href="${data.mapsUrl}" target="_blank" rel="noopener">📍</a></span>` : ""}
+    </div>
+    <div class="resto-tipo">${data.categoria}</div>
+    <div class="resto-desc">${data.fullDesc}</div>
+    ${data.dica ? `<div class="flow-tip"><span>💡</span><span class="tip-text">${data.dica}</span></div>` : ""}
+    ${data.admissao ? `<div class="duration-tag" style="margin-top:2px;">${data.admissao}</div>` : ""}
+  `;
+  document.getElementById("resto-modal-overlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+document.addEventListener("click", (e) => {
+  const trigger = e.target.closest("[data-resto]");
+  if(trigger){
+    e.preventDefault();
+    openRestoModal(trigger.getAttribute("data-resto"));
+    return;
+  }
+  const attractionTrigger = e.target.closest("[data-attraction]");
+  if(attractionTrigger){
+    e.preventDefault();
+    openAttractionModal(attractionTrigger.getAttribute("data-attraction"));
+    return;
+  }
+  if(e.target.id === "resto-modal-close" || e.target.id === "resto-modal-overlay"){
+    closeRestoModal();
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if(e.key === "Escape") closeRestoModal();
+});
+
+/* ============================================================
+   BACK TO TOP — aparece ao rolar, só nas telas de dia
+   ============================================================ */
+window.addEventListener("scroll", () => {
+  const btn = document.getElementById("back-to-top-btn");
+  if(!btn) return;
+  const onDayPage = /^#\/dia\//.test(window.location.hash);
+  if(onDayPage && window.scrollY > 500){
+    btn.classList.add("show");
+  } else {
+    btn.classList.remove("show");
+  }
+});
+
+document.getElementById("back-to-top-btn").addEventListener("click", () => {
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+
+const DAYS = [
+  {
+    id: 1, colorClass: "c1", date: "19/09 · Sábado",
+    name: "Central Park + Upper West Side",
+    km: "~10 km", ritmo: "forte", ritmoLabel: "🔴 Forte",
+    reserva: "AMNH (10h00)", chuva: "Alta flexibilidade",
+    ready: true
+  },
+  {
+    id: 2, colorClass: "c2", date: "20/09 · Domingo",
+    name: "Midtown Clássica + Memorial 9/11",
+    km: "~8-9 km", ritmo: "moderado", ritmoLabel: "🟡 Moderado",
+    reserva: "Empire State (09h00)", chuva: "—",
+    ready: true
+  },
+  {
+    id: 3, colorClass: "c3", date: "21/09 · Segunda",
+    name: "SoHo + Brooklyn",
+    km: "~12-13 km", ritmo: "muitoforte", ritmoLabel: "🔴 Muito Forte",
+    reserva: "—", chuva: "Baixa",
+    ready: true
+  },
+  {
+    id: 4, colorClass: "c4", date: "22/09 · Terça",
+    name: "Roosevelt Island + SUMMIT + Broadway",
+    km: "~8-9 km", ritmo: "moderado", ritmoLabel: "🟡 Moderado",
+    reserva: "SUMMIT (14h00) · Broadway (19h00)", chuva: "Alta",
+    ready: true
+  },
+  {
+    id: 5, colorClass: "c5", date: "23/09 · Quarta",
+    name: "Estátua da Liberdade + FiDi Histórico & Seaport",
+    km: "~6-7 km", ritmo: "moderado", ritmoLabel: "🟡 Moderado",
+    reserva: "Statue City Cruises (09h30)", chuva: "Baixa (manhã)",
+    ready: true
+  },
+  {
+    id: 6, colorClass: "c6", date: "24/09 · Quinta",
+    name: "Hudson Yards + High Line + Villages",
+    km: "~8-9 km", ritmo: "moderado", ritmoLabel: "🟡 Moderado",
+    reserva: "—", chuva: "Alta",
+    ready: true
+  }
+];
+
+/* ============================================================
+   ROUTER
+   ============================================================ */
+function navigate(hash){
+  window.location.hash = hash;
+}
+
+function render(){
+  const hash = window.location.hash || "#/";
+  const app = document.getElementById("app");
+
+  const dayMatch = hash.match(/^#\/dia\/(\d+)/);
+
+  if (dayMatch) {
+    const dayId = parseInt(dayMatch[1], 10);
+    const day = DAYS.find(d => d.id === dayId);
+    app.innerHTML = day.id === 1 ? renderDay1() : day.id === 2 ? renderDay2() : day.id === 3 ? renderDay3() : day.id === 4 ? renderDay4() : day.id === 5 ? renderDay5() : day.id === 6 ? renderDay6() : renderEmptyDay(day);
+  } else if (hash.startsWith("#/gastronomia")) {
+    app.innerHTML = renderGastronomia();
+  } else if (hash.startsWith("#/atracoes")) {
+    app.innerHTML = renderAtracoes();
+  } else if (hash.startsWith("#/cronograma")) {
+    app.innerHTML = renderMacro();
+  } else {
+    app.innerHTML = renderLanding();
+  }
+
+  window.scrollTo(0, 0);
+  attachHandlers();
+}
+
+// Coordenadas do hotel (origem/destino da rota completa de qualquer dia)
+const HOTEL = { lat:40.755553, lng:-73.993031, placeId:"ChIJM3IUOK1ZwokRmgyn41pFrtE" };
+
+function mapsPlaceUrl(map){
+  return `https://www.google.com/maps/search/?api=1&query=${map.lat},${map.lng}&query_place_id=${map.placeId}`;
+}
+
+const STEPS_BY_DAY = {
+  "1": [
+    { key:"hotel-out", name:"Saída do hotel", description:"81 St–Museum of Natural History", chip:"station", node:"hollow" },
+    { key:"amnh", name:"🏛️ AMNH — Museu de História Natural", description:"Um dos maiores museus de história natural do mundo.", node:"solid",
+      map:{ lat:40.7813241, lng:-73.9739882, placeId:"ChIJCXoPsPRYwokRsV1MYnKBfaI" } },
+    { key:"belvedere", name:"🏰 Belvedere Castle", description:"Vista panorâmica sobre o Turtle Pond.", node:"solid", duration:"15–20 min",
+      map:{ lat:40.7794302, lng:-73.9690677, placeId:"ChIJFXzf4e9YwokRtXgpty_i74g" } },
+    { key:"strawberry", name:"🍓 Strawberry Fields", description:"Memorial Imagine em homenagem a John Lennon.", node:"solid", duration:"10–15 min",
+      map:{ lat:40.7757544, lng:-73.9752076, placeId:"ChIJ2aWDJ_hYwokRUKinWgKdI70" } },
+    { key:"bowbridge", name:"🌉 Bow Bridge", description:"A ponte mais icônica e fotografada do Central Park.", node:"solid", duration:"10–15 min",
+      map:{ lat:40.7757544, lng:-73.9717784, placeId:"ChIJiR6aeI1YwokRkCNO-e1lQfs" } },
+    { key:"bethesda", name:"⛲ Bethesda Terrace & Fountain", description:"O coração arquitetônico do Central Park.", node:"solid", duration:"15–20 min",
+      map:{ lat:40.7739528, lng:-73.9709657, placeId:"ChIJEYYWppJYwokRUTul6ztwlJ0" } },
+    { key:"mall", name:"🌳 The Mall", description:"Alameda clássica cercada por olmos americanos.", node:"solid", duration:"10–15 min",
+      map:{ lat:40.7723522, lng:-73.9715901, placeId:"ChIJxcSlpvJYwokRLcMSp1tjBf4" } },
+    { key:"hotel-back", name:"Volta para o hotel", description:"333 W 38th St", chip:"address", node:"hollow",
+      map:{ lat:40.755553, lng:-73.993031, placeId:"ChIJM3IUOK1ZwokRmgyn41pFrtE" } }
+  ],
+  "2": [
+    { key:"hotel-out", name:"Saída do hotel", description:"Empire State Building", chip:"address", node:"hollow" },
+    { key:"empire", name:"🏙️ Empire State Building", description:"Um dos observatórios mais famosos do mundo.", node:"solid",
+      map:{ lat:40.7484405, lng:-73.9856644, placeId:"ChIJaXQRs6lZwokRY6EFpJnhNNE" } },
+    { key:"cafe", name:"☕ Café", description:"Blue Bottle Coffee.", node:"solid" },
+    { key:"fifthave", name:"🛍️ 5ª Avenida", description:"Apple, Uniqlo e Saks no caminho.", node:"solid",
+      map:{ lat:40.7638478, lng:-73.9729785, placeId:"ChIJp-0cdPBYwokRRNGjt9080k8" } },
+    { key:"stpatricks", name:"⛪ St. Patrick's Cathedral", description:"Principal catedral católica de Nova York.", node:"solid", duration:"10–15 min",
+      map:{ lat:40.7586117, lng:-73.9761953, placeId:"ChIJUW4vEPxYwokRW6o24DU0YIg" } },
+    { key:"rockefeller", name:"🏙️ Rockefeller Center", description:"Complexo art déco com a estátua de Prometeu.", node:"solid", duration:"15–20 min",
+      map:{ lat:40.7587402, lng:-73.9786736, placeId:"ChIJ9U1mz_5YwokRosza1aAk0jM" } },
+    { key:"grandcentral", name:"🚉 Grand Central Terminal", description:"Estação histórica com teto constelar.", node:"solid", duration:"15–20 min",
+      map:{ lat:40.75282, lng:-73.9772, placeId:"ChIJhRwB-yFawokRi0AhGH87UTc" } },
+    { key:"almoco", name:"🍔 Almoço", description:"Los Tacos No. 1.", node:"solid" },
+    { key:"bryantpark", name:"🌳 Bryant Park", description:"Parque urbano cercado por arranha-céus.", node:"solid", duration:"10–15 min",
+      map:{ lat:40.7535367, lng:-73.9829529, placeId:"ChIJvbGg56pZwokRp_E3JbivnLQ" } },
+    { key:"nypl", name:"📚 New York Public Library", description:"Uma das bibliotecas mais bonitas dos EUA.", node:"solid", duration:"20–30 min",
+      map:{ lat:40.7531823, lng:-73.9822534, placeId:"ChIJqaiomQBZwokRTHOaUG7fUTs" } },
+    { key:"memorial911", name:"🕊️ 9/11 Memorial", description:"Homenagem solene no local exato das antigas Torres Gêmeas.", node:"solid", duration:"30–40 min",
+      map:{ lat:40.7111026, lng:-74.0130975, placeId:"ChIJuywwGBpawokRCb31xeHV66I" } },
+    { key:"oculus", name:"🕊️ The Oculus", description:"Estação futurista projetada por Santiago Calatrava.", node:"solid", duration:"15–20 min",
+      map:{ lat:40.7118042, lng:-74.0118498, placeId:"ChIJ4f4VwT5bwokRwQ6hjfC-eTM" } },
+    { key:"jantar", name:"🍽️ Jantar", description:"Hamburger America.", node:"solid" },
+    { key:"hotel-back", name:"Volta para o hotel", description:"333 W 38th St", chip:"address", node:"hollow",
+      map:{ lat:40.755553, lng:-73.993031, placeId:"ChIJM3IUOK1ZwokRmgyn41pFrtE" } }
+  ],
+  "3": [
+    { key:"hotel-out", name:"Saída do hotel", description:"Leon's Bagels, via Spring St", chip:"station", node:"hollow" },
+    { key:"cafe", name:"☕ Café", description:"Leon's Bagels.", node:"solid" },
+    { key:"soho", name:"🛍️ SoHo", description:"Fachadas de ferro fundido, galerias e brechós de luxo.", node:"solid", duration:"2h30–3h",
+      map:{ lat:40.7236549, lng:-74.0012448, placeId:"ChIJGyg_BYxZwokRd4xJ9el8IUk" } },
+    { key:"almoco", name:"🍔 Almoço", description:"Katz's Delicatessen.", node:"solid" },
+    { key:"chinatown", name:"🏮 Chinatown", description:"Maior bairro chinês de Nova York.", node:"solid", duration:"30–40 min",
+      map:{ lat:40.7143521, lng:-73.9979432, placeId:"ChIJ27bN9yZawokRc9Z6LnID29s" } },
+    { key:"brooklynbridge", name:"🌉 Ponte do Brooklyn", description:"Travessia histórica de 1883 com vista do skyline.", node:"solid",
+      map:{ lat:40.7068623, lng:-73.9978405, placeId:"ChIJ41U-c_ZbwokRnOGug5xZbys" } },
+    { key:"dumbo", name:"📸 DUMBO & Brooklyn Bridge Park", description:"Ângulo clássico da foto e pôr do sol à beira-rio.", node:"solid", duration:"20–30 min",
+      map:{ lat:40.7033165, lng:-73.9895698, placeId:"ChIJd9SPZTFawokRh9NpOTE-G5k" } },
+    { key:"hotel-back", name:"Volta para o hotel", description:"333 W 38th St", chip:"address", node:"hollow",
+      map:{ lat:40.755553, lng:-73.993031, placeId:"ChIJM3IUOK1ZwokRmgyn41pFrtE" } }
+  ]
+};
+
+STEPS_BY_DAY["4"] = [
+  { key:"hotel-out", name:"Saída do hotel", description:"Remi Flower & Coffee, via Lexington Av/53 St", chip:"station", node:"hollow" },
+  { key:"cafe", name:"☕ Café", description:"Remi Flower & Coffee.", node:"solid" },
+  { key:"tram", name:"🚡 Roosevelt Island Tramway (Ida)", description:"Bonde aéreo histórico cruzando o East River.", node:"solid",
+    map:{ lat:40.7612789, lng:-73.9641664, placeId:"ChIJfQDvGoxZwokRvzLRRApytgQ" } },
+  { key:"rooseveltisland", name:"🏝️ Roosevelt Island", description:"Caminhada tranquila na orla, vista panorâmica do skyline.", node:"solid", duration:"~1h",
+    map:{ lat:40.7506105, lng:-73.960524, placeId:"ChIJRUgJkx9ZwokR6W8mnGZVcl0" } },
+  { key:"almoco", name:"🍔 Almoço", description:"UrbanSpace Vanderbilt.", node:"solid" },
+  { key:"summit", name:"🏙️ SUMMIT One Vanderbilt", description:"Observatório imersivo e espelhado no topo do arranha-céu.", node:"solid",
+    map:{ lat:40.7527746, lng:-73.9787253, placeId:"ChIJd7I1IO5ZwokRbv7YUlgChl4" } },
+  { key:"hotelbreak", name:"🛎️ Hotel — pausa pré-teatro", description:"Banho e descanso antes do jantar e do teatro.", node:"solid",
+    map:{ lat:40.755553, lng:-73.993031, placeId:"ChIJM3IUOK1ZwokRmgyn41pFrtE" } },
+  { key:"jantar", name:"🍽️ Jantar", description:"OBAO ou Junior's Restaurant.", node:"solid" },
+  { key:"theater", name:"🎭 Broadway - Aladdin (New Amsterdam Theatre)", description:"Espetáculo às 19h00 — ingresso garantido.", node:"solid",
+    map:{ lat:40.7560914, lng:-73.987788, placeId:"ChIJS7-89FNYwokRqHU42APYyVI" } },
+  { key:"timessquare", name:"🏙️ Times Square à Noite", description:"Luzes e a escadaria vermelha ao sair do teatro.", node:"solid",
+    map:{ lat:40.7579747, lng:-73.9855426, placeId:"ChIJmQJIxlVYwokRLgeuocVOGVU" } },
+  { key:"hotel-back", name:"Volta para o hotel", description:"333 W 38th St", chip:"address", node:"hollow",
+    map:{ lat:40.755553, lng:-73.993031, placeId:"ChIJM3IUOK1ZwokRmgyn41pFrtE" } }
+];
+
+STEPS_BY_DAY["5"] = [
+  { key:"hotel-out", name:"Saída do hotel", description:"Statue City Cruises, via South Ferry", chip:"station", node:"hollow" },
+  { key:"liberty", name:"🗽 Estátua da Liberdade & Ellis Island", description:"Statue City Cruises — circuito completo.", node:"solid",
+    map:{ lat:40.7019423, lng:-74.0165238, placeId:"ChIJex6ai6pbwokRbh3cz6wKQ0w" } },
+  { key:"almoco", name:"🍽️ Almoço", description:"Fraunces Tavern.", node:"solid" },
+  { key:"wallstreet", name:"📈 Circuito Histórico de Wall Street", description:"Charging Bull, NYSE, Federal Hall e Trinity Church.", node:"solid", duration:"1h–1h15" },
+  { key:"seaport", name:"🌊 South Street Seaport & Pier 17", description:"Caminhada pelo pier com vista da Ponte do Brooklyn.", node:"solid", duration:"30–45 min",
+    map:{ lat:40.705573, lng:-74.0014567, placeId:"ChIJR1pTRTxawokRyzoX5XQ_alI" } },
+  { key:"jantar", name:"🍽️ Jantar", description:"The Dead Rabbit ou Harry's Side Bar.", node:"solid" },
+  { key:"hotel-back", name:"Volta para o hotel", description:"333 W 38th St", chip:"address", node:"hollow",
+    map:{ lat:40.755553, lng:-73.993031, placeId:"ChIJM3IUOK1ZwokRmgyn41pFrtE" } }
+];
+
+STEPS_BY_DAY["6"] = [
+  { key:"hotel-out", name:"Saída do hotel", description:"Vessel, via Hudson Yards", chip:"address", node:"hollow" },
+  { key:"vessel", name:"🏙️ Vessel", description:"Estrutura futurista com 154 escadarias interligadas.", node:"solid",
+    map:{ lat:40.7538073, lng:-74.0021537, placeId:"ChIJqygAFrRZwokRwF0VrBoXS0E" } },
+  { key:"highline", name:"🌿 The High Line", description:"Parque suspenso sobre uma antiga linha férrea elevada.", node:"solid",
+    map:{ lat:40.7528349, lng:-74.0022969, placeId:"ChIJw75hJQBZwokRWP6ab1XHN04" } },
+  { key:"chelseamarket", name:"🍽️ Chelsea Market", description:"Mercado gastronômico numa antiga fábrica da Nabisco.", node:"solid" },
+  { key:"meatpacking", name:"🛍️ Meatpacking District & Little Island", description:"Antiga região industrial, hoje um dos bairros mais descolados de Manhattan.", node:"solid",
+    map:{ lat:40.7420024, lng:-74.010299, placeId:"ChIJL-CJmTFZwokRsPcqje_bn7w" } },
+  { key:"westvillage", name:"🏡 West Village", description:"Ruas arborizadas, brownstones e cafés charmosos.", node:"solid" },
+  { key:"washingtonsquare", name:"🌳 Washington Square Park", description:"O coração de Greenwich Village, com o arco e a atmosfera universitária da NYU.", node:"solid",
+    map:{ lat:40.7308838, lng:-73.997332, placeId:"ChIJjX494pBZwokRGH620d9eYfo" } },
+  { key:"jantar", name:"🍽️ Jantar", description:"L'Industrie Pizzeria — West Village.", node:"solid" },
+  { key:"hotel-back", name:"Volta para o hotel", description:"333 W 38th St", chip:"address", node:"hollow",
+    map:{ lat:40.755553, lng:-73.993031, placeId:"ChIJM3IUOK1ZwokRmgyn41pFrtE" } }
+];
+
+function buildFlowSteps(){
+  const flow = document.querySelector(".flow-details");
+  if(!flow) return;
+
+  const dayId = flow.getAttribute("data-day") || "1";
+  const steps = STEPS_BY_DAY[dayId];
+  if(!steps){
+    console.warn(`buildFlowSteps: nenhuma configuração encontrada para o dia "${dayId}".`);
+    return;
+  }
+
+  const rows = Array.from(flow.querySelectorAll(".tl-row"));
+
+  // Agrupa as linhas estáticas pelo atributo data-step, na ordem de
+  // primeira aparição — não depende de posição/índice numérico, então
+  // adicionar, remover ou reordenar linhas no HTML estático não quebra
+  // o agrupamento, desde que cada linha carregue o data-step correto.
+  const rowsByStep = new Map();
+  rows.forEach(row => {
+    const key = row.getAttribute("data-step");
+    if(!key) return; // linha sem data-step é ignorada (não deveria ocorrer)
+    if(!rowsByStep.has(key)) rowsByStep.set(key, []);
+    rowsByStep.get(key).push(row);
+  });
+
+  // Link com a rota do dia inteira (hotel → todas as paradas com coordenada → hotel)
+  const routeStops = steps.filter(s => s.map).map(s => `${s.map.lat},${s.map.lng}`);
+  const fullRouteUrl = `https://www.google.com/maps/dir/?api=1&origin=${HOTEL.lat},${HOTEL.lng}&destination=${HOTEL.lat},${HOTEL.lng}&waypoints=${routeStops.join("|")}&travelmode=walking`;
+
+  const section = document.createElement("section");
+  section.className = "flow-section";
+  section.innerHTML = `<div class="section-title">📍 Fluxo do dia <a class="stop-count route-link" href="${fullRouteUrl}" target="_blank" rel="noopener">🗺️ ${steps.length} paradas · ver rota</a></div><div class="route flow-steps" style="padding:0 0 16px"><div class="route-line"></div></div>`;
+  const list = section.querySelector(".flow-steps");
+
+  steps.forEach(step => {
+    const groupRows = rowsByStep.get(step.key) || [];
+    if(groupRows.length === 0){
+      console.warn(`buildFlowSteps: nenhuma linha encontrada para data-step="${step.key}" (dia ${dayId}) — verifique se o HTML estático tem essa tag.`);
+      return;
+    }
+
+    const content = groupRows.map(row => row.querySelector(".tl-content")?.innerHTML || "").join("");
+    const contentHolder = document.createElement("div");
+    contentHolder.innerHTML = content;
+    contentHolder.querySelectorAll(".flow-title, .flow-desc").forEach(el => el.remove());
+    contentHolder.querySelectorAll(".flow-stop").forEach(el => {
+      if(!el.textContent.trim()) el.remove();
+    });
+
+    const time = groupRows
+      .map(row => row.querySelector(".tl-time")?.textContent.trim() || "")
+      .find(Boolean) || "";
+
+    const mapIconHtml = step.map
+      ? `<a class="maps-icon-btn" href="${mapsPlaceUrl(step.map)}" target="_blank" rel="noopener" aria-label="Abrir ${step.name.replace(/<[^>]+>/g,"")} no Google Maps">📍</a>`
+      : "";
+
+    const durationHtml = step.duration
+      ? `<div class="duration-tag">⏱️ Tempo sugerido: ${step.duration}</div>`
+      : "";
+
+    const row = document.createElement("div");
+    row.className = "tl-row";
+    row.innerHTML = `<div class="tl-time"></div><div class="tl-node"><div class="dot ${step.node === "hollow" ? "hollow" : ""}"></div></div><div class="tl-content"><details class="flow-step"><summary><span class="step-actions">${mapIconHtml}<span class="step-chevron">⌄</span></span><span class="step-summary">${time ? `<span class="step-time">${time}</span>` : ""}<strong>${step.name}</strong><span> — ${step.chip ? `<span class="${step.chip}-chip">${step.description}</span>` : step.description}</span></span></summary><div class="flow-step-body">${durationHtml}${contentHolder.innerHTML}</div></details></div>`;
+
+    const mapBtn = row.querySelector(".maps-icon-btn");
+    if(mapBtn){
+      mapBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        window.open(mapBtn.href, "_blank", "noopener");
+      });
+    }
+
+    list.appendChild(row);
+  });
+
+  flow.replaceWith(section);
+}
+
+function attachHandlers(){
+  buildFlowSteps();
+  document.querySelectorAll("[data-nav]").forEach(el=>{
+    el.setAttribute("role","button");
+    el.setAttribute("tabindex","0");
+    el.addEventListener("click", ()=> navigate(el.getAttribute("data-nav")));
+    el.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        navigate(el.getAttribute("data-nav"));
+      }
+    });
+  });
+  document.querySelectorAll("[data-back]").forEach(el=>{
+    el.setAttribute("role","button");
+    el.setAttribute("tabindex","0");
+    el.addEventListener("click", ()=> history.back());
+    el.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        history.back();
+      }
+    });
+  });
+  document.querySelectorAll("[data-scroll]").forEach(el=>{
+    el.setAttribute("role","button");
+    el.setAttribute("tabindex","0");
+    const doScroll = ()=>{
+      lastScrollY = window.scrollY;
+      const target = document.getElementById(el.getAttribute("data-scroll"));
+      if(target){
+        target.scrollIntoView({behavior:"smooth", block:"start"});
+        showReturnChip();
+      }
+    };
+    el.addEventListener("click", doScroll);
+    el.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); doScroll(); }
+    });
+  });
+  const chip = document.getElementById("return-chip");
+  if(chip){
+    chip.addEventListener("click", ()=>{
+      window.scrollTo({top:lastScrollY, behavior:"smooth"});
+      chip.classList.remove("show");
+    });
+  }
+}
+
+let lastScrollY = 0;
+function showReturnChip(){
+  const chip = document.getElementById("return-chip");
+  if(chip) chip.classList.add("show");
+}
+
+window.addEventListener("hashchange", render);
+window.addEventListener("DOMContentLoaded", render);
+
+/* ============================================================
+   MACRO SCREEN
+   ============================================================ */
+function badgeClass(ritmo){
+  if(ritmo === "muitoforte") return "muitoforte";
+  if(ritmo === "forte") return "forte";
+  if(ritmo === "moderado") return "moderado";
+  return "leve";
+}
+
+/* ============================================================
+   LANDING — página inicial com os 3 acessos
+   ============================================================ */
+function renderLanding(){
+  return `
+    <div class="macro-header">
+      <div class="macro-eyebrow">Roteiro NYC · 19–24 Set</div>
+      <div class="macro-title">Nova York</div>
+      <div class="macro-sub">Escolha o que quer ver.</div>
+    </div>
+    <div class="landing-nav">
+      <div class="landing-card" data-nav="#/cronograma">
+        <div class="landing-card-icon">📅</div>
+        <div class="landing-card-text">
+          <div class="landing-card-title">Cronograma</div>
+          <div class="landing-card-sub">O roteiro dia a dia, com fluxo, horários e deslocamento.</div>
+        </div>
+        <div class="day-chevron">›</div>
+      </div>
+      <div class="landing-card" data-nav="#/gastronomia">
+        <div class="landing-card-icon">🍽️</div>
+        <div class="landing-card-text">
+          <div class="landing-card-title">Restaurantes &amp; Cafés</div>
+          <div class="landing-card-sub">Todas as opções de comida, organizadas por tipo.</div>
+        </div>
+        <div class="day-chevron">›</div>
+      </div>
+      <div class="landing-card" data-nav="#/atracoes">
+        <div class="landing-card-icon">📍</div>
+        <div class="landing-card-text">
+          <div class="landing-card-title">Atrações</div>
+          <div class="landing-card-sub">Todos os pontos turísticos e paradas do roteiro, num só lugar.</div>
+        </div>
+        <div class="day-chevron">›</div>
+      </div>
+    </div>
+    <footer class="spacer"></footer>
+  `;
+}
+
+/* ============================================================
+   ATRAÇÕES — visão geral de todos os pontos turísticos
+   ============================================================ */
+function renderAtracoes(){
+  const categoryOrder = [
+    "Marcos Históricos", "Museus & Cultura", "Mirantes & Arquitetura",
+    "Parques & Natureza", "Bairros para Explorar", "Experiências & Entretenimento"
+  ];
+  const categoryIcon = {
+    "Marcos Históricos": "🗽", "Museus & Cultura": "🏛️", "Mirantes & Arquitetura": "🏙️",
+    "Parques & Natureza": "🌳", "Bairros para Explorar": "🏘️", "Experiências & Entretenimento": "🎭"
+  };
+
+  const list = getAttractionsList();
+  const grouped = {};
+  list.forEach(a => {
+    if(!grouped[a.categoria]) grouped[a.categoria] = [];
+    grouped[a.categoria].push(a);
+  });
+
+  const sections = categoryOrder.filter(cat => grouped[cat]).map(cat => {
+    const rows = grouped[cat].map(a => `
+      <div class="store-row resto-trigger" data-attraction="${a.key}">
+        <div class="store-info">
+          <span class="store-name">${a.name}</span>
+          <span class="store-tag optional">${a.desc || ""}</span>
+        </div>
+        ${a.mapsUrl ? `<a class="maps-icon-btn" href="${a.mapsUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>` : ""}
+      </div>
+    `).join("");
+
+    return `
+      <div class="section-title">${categoryIcon[cat] || ""} ${cat}</div>
+      <div class="simple-section">
+        <div class="store-list">${rows}</div>
+      </div>
+    `;
+  }).join("");
+
+  return `
+    <div class="topbar">
+      <button class="back-btn" data-back>←</button>
+      <div class="topbar-title">Atrações</div>
+    </div>
+
+    <div class="day-header">
+      <div class="day-header-eyebrow">Todos os dias</div>
+      <h1>📍 Pontos Turísticos</h1>
+    </div>
+
+    <div class="container" style="padding-top:16px;">
+      ${sections}
+    </div>
+    <footer class="spacer"></footer>
+  `;
+}
+
+function renderMacro(){
+  const cards = DAYS.map(d => {
+    const stepCount = (STEPS_BY_DAY[String(d.id)] || []).length;
+    return `
+    <div class="day-card ${d.colorClass}" data-nav="#/dia/${d.id}">
+      <div class="day-card-top">
+        <div>
+          <div class="day-date">${d.date}</div>
+          <div class="day-name">${d.name}</div>
+        </div>
+        <div class="day-chevron">›</div>
+      </div>
+      <div class="day-meta">
+        <span>🚶 ${d.km}</span>
+        <span class="badge ${badgeClass(d.ritmo)}">${d.ritmoLabel}</span>
+        ${stepCount > 0 ? `<span class="meta-stops">📍 ${stepCount}</span>` : ""}
+        ${d.reserva !== "—" ? `<span>🎟️ ${d.reserva}</span>` : ""}
+      </div>
+    </div>
+  `;
+  }).join("");
+
+  return `
+    <div class="macro-header">
+      <button class="gastro-nav-btn" data-nav="#/gastronomia" aria-label="Ver todos os restaurantes">🍽️</button>
+      <div class="macro-eyebrow">Roteiro NYC · 19–24 Set</div>
+      <div class="macro-title">Cronograma da semana</div>
+      <div class="macro-sub">Toque em um dia para ver o roteiro completo.</div>
+    </div>
+    <div class="day-list">
+      ${cards}
+    </div>
+    <footer class="spacer"></footer>
+  `;
+}
+
+/* ============================================================
+   GASTRONOMIA — visão geral de todos os restaurantes
+   ============================================================ */
+function renderGastronomia(){
+  const dayShort = { 1:"Dia 1", 2:"Dia 2", 3:"Dia 3", 4:"Dia 4", 5:"Dia 5", 6:"Dia 6" };
+
+  const categoryOrder = ["Café", "Padaria", "Sobremesa", "Food Hall", "Restaurante", "Bar"];
+  const categoryIcon = {
+    "Café": "☕", "Padaria": "🥐", "Sobremesa": "🍰",
+    "Food Hall": "🍔", "Restaurante": "🍽️", "Bar": "🍺"
+  };
+
+  const entries = Object.keys(RESTO_DB)
+    .map(key => ({ key, ...RESTO_DB[key] }))
+    .filter(r => r.dia > 0);
+
+  const grouped = {};
+  entries.forEach(r => {
+    const cat = r.categoria || "Restaurante";
+    if(!grouped[cat]) grouped[cat] = [];
+    grouped[cat].push(r);
+  });
+
+  const sections = categoryOrder.filter(cat => grouped[cat]).map(cat => {
+    const rows = grouped[cat].map(r => `
+      <div class="store-row resto-trigger" data-resto="${r.key}">
+        <div class="store-info">
+          <span class="store-name">${r.name}</span>
+          <span class="store-tag optional">${r.regiao} · ${dayShort[r.dia] || ""}</span>
+        </div>
+        <span class="gastro-row-actions">
+          <a class="maps-icon-btn" href="${r.mapsUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+          <a class="ig-icon-btn" href="${r.igUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+        </span>
+      </div>
+    `).join("");
+
+    return `
+      <div class="section-title">${categoryIcon[cat] || ""} ${cat}</div>
+      <div class="simple-section">
+        <div class="store-list">${rows}</div>
+      </div>
+    `;
+  }).join("");
+
+  return `
+    <div class="topbar">
+      <button class="back-btn" data-back>←</button>
+      <div class="topbar-title">Gastronomia</div>
+    </div>
+
+    <div class="day-header">
+      <div class="day-header-eyebrow">Todos os dias</div>
+      <h1>🍽️ Restaurantes &amp; Cafés</h1>
+    </div>
+
+    <div class="container" style="padding-top:16px;">
+      ${sections}
+    </div>
+    <footer class="spacer"></footer>
+  `;
+}
+
+/* ============================================================
+   EMPTY DAY (placeholder)
+   ============================================================ */
+function renderEmptyDay(day){
+  return `
+    <div class="topbar">
+      <button class="back-btn" data-back>←</button>
+      <div class="topbar-title">${day.date}</div>
+    </div>
+    <div class="day-header">
+      <div class="day-header-eyebrow">${day.date}</div>
+      <h1>${day.name}</h1>
+    </div>
+    <div class="empty-day">
+      <div class="icon">🚧</div>
+      <p>Esse dia ainda está em construção — fluxo, gastronomia e dicas serão adicionados em seguida, seguindo o mesmo padrão do Dia 1.</p>
+    </div>
+  `;
+}
+
+/* ============================================================
+   DAY 1 — FULL CONTENT
+   ============================================================ */
+function renderDay1(){
+  return `
+    <div class="topbar">
+      <button class="back-btn" data-back>←</button>
+      <div class="topbar-title">19/09 · Sábado</div>
+    </div>
+
+    <div class="day-header">
+      <div class="day-header-eyebrow">Dia 1 de 6</div>
+      <h1>Central Park + Upper West Side</h1>
+    </div>
+
+    <div class="summary-bar">
+      <div class="summary-item">
+        <div class="summary-label">Caminhada e ritmo</div>
+        <div class="summary-value">🚶 ~10 km · 🔴 Forte</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">Chuva - flexibilidade</div>
+        <div class="summary-value">☔ Alta</div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <details class="overview-block flow-details" data-day="1" open>
+        <summary><span class="summary-title-group">📍 Fluxo do dia <span class="stop-count">6 paradas</span></span></summary>
+        <div class="route">
+        <div class="route-line"></div>
+
+        <div class="tl-row" data-step="hotel-out">
+          <div class="tl-time">09h15</div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">
+              <b>Saída do Hotel</b><br>
+              🚶 5-6 min a pé (~450m) até <span class="station-chip">42 St–Port Authority</span><br>
+              🚇 Linha <b>C</b> (sentido Uptown) → <span class="station-chip">81 St–Museum of Natural History</span> (~15-18 min)
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="hotel-out">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="hook" data-scroll="gastronomia"><span class="hook-text">☕ Café?</span> <span class="arrow">Ver opções ›</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="amnh">
+          <div class="tl-time">10h00</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-time-label">🎟️ Reserva confirmada · 10h00</div>
+              <div class="flow-title">🏛️ AMNH — Museu de História Natural</div>
+              <div class="flow-desc">Um dos maiores museus de história natural do mundo.</div>
+              <div class="flow-tip"><span>💡</span> Reserve 2h30–3h para a visita.</div>
+              <div class="flow-tip"><span>💡</span><span class="tip-text">Se estiver aberta, a entrada diretamente pela estação <span class="station-inline">81 St–Museum of Natural History</span> costuma ser mais rápida do que a entrada principal pela Central Park West.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="amnh">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 3 min a pé (~230m) saindo pela <span class="address-chip">Columbus Ave / 79th St</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="amnh">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="hook" data-scroll="gastronomia"><span class="hook-text">🍔 Almoço?</span> <span class="arrow">Ver opções ›</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="amnh">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 5 min a pé (~380m) entrando no parque pela <span class="address-chip">79th St (West)</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="belvedere">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🏰 Belvedere Castle</div>
+              <div class="flow-desc">Castelo de pedra de 1869 no ponto mais alto do parque — vista panorâmica sobre o Turtle Pond.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="belvedere">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~10 min a pé (~750m) rumo a <span class="address-chip">Strawberry Fields</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="strawberry">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🍓 Strawberry Fields</div>
+              <div class="flow-desc">Memorial Imagine, em homenagem a John Lennon, localizado em frente ao Edifício Dakota, onde ele morava.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="strawberry">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~7 min a pé (~550m) rumo a <span class="address-chip">Bow Bridge</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="bowbridge">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🌉 Bow Bridge</div>
+              <div class="flow-desc">A ponte de ferro fundido mais icônica do Central Park e um dos locais mais fotografados da cidade.</div>
+              <div class="flow-tip"><span>💡</span> Fica com iluminação ideal para fotos durante a tarde.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="bowbridge">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~3 min a pé (~230m) margeando o lago até <span class="address-chip">Bethesda Terrace</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="bethesda">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">⛲ Bethesda Terrace &amp; Fountain</div>
+              <div class="flow-desc">Coração arquitetônico do Central Park, conhecido pelos arcos de azulejo e pela fonte Angel of the Waters.</div>
+              <div class="flow-tip"><span>💡</span> Músicos costumam tocar sob os arcos — vale parar alguns minutos.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="bethesda">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 subindo as escadas (~50m) até <span class="address-chip">The Mall</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="mall">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🌳 The Mall</div>
+              <div class="flow-desc">Alameda monumental cercada por olmos americanos centenários, uma das caminhadas mais clássicas do parque.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="mall">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="flow-optional">
+              <b>🚲 Opcional</b>
+              Alugar uma bicicleta na saída do parque para percorrer parte do Central Park Loop. As áreas internas, como The Mall e Bethesda Terrace, são exclusivas para pedestres.
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="mall">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~10 min a pé (~750m) até <span class="address-chip">Columbus Circle (59 St)</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="hotel-back">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="hook" data-scroll="extras"><span class="hook-text">🛍️ Compras?</span> <span class="arrow">Ver opções ›</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="hotel-back">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="hook" data-scroll="gastronomia"><span class="hook-text">🍽️ Jantar?</span> <span class="arrow">Ver opções ›</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="hotel-back">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚇 Linha <b>A/B/C/D</b> (sentido Downtown) → <span class="station-chip">42 St–Port Authority</span> (~10 min)</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="hotel-back">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit"><b>Hotel</b> <span class="address-chip">333 W 38th St</span></div>
+          </div>
+        </div>
+        </div>
+      </details>
+
+      <div class="section-title" id="gastronomia">🍽️ Gastronomia</div>
+      <div class="simple-section">
+        <div class="placeholder-note">A definir juntos — café, almoço rápido e opção sentada para essa região.</div>
+      </div>
+      <div class="section-title">💡 Observações úteis</div>
+      <div class="simple-section">
+        <ul class="obs-list">
+          <li>💧 Leve uma garrafa de água — o parque possui diversos bebedouros para recarga.</li>
+          <li>🎭 Nos fins de semana, é comum encontrar artistas de rua e músicos ao longo do parque.</li>
+          <li>☔ Plano B (chuva forte): reduzir ou cancelar a caminhada no Central Park e estender a visita ao AMNH, visitar a New-York Historical Society ou, se houver disposição, seguir para o The Metropolitan Museum of Art (MET).</li>
+        </ul>
+      </div>
+
+    </div>
+    <footer class="spacer"></footer>
+    <div class="return-chip" id="return-chip">↑ Voltar ao fluxo</div>
+  `;
+}
+
+/* ============================================================
+   DAY 2 — FULL CONTENT
+   ============================================================ */
+function renderDay2(){
+  return `
+    <div class="topbar">
+      <button class="back-btn" data-back>←</button>
+      <div class="topbar-title">20/09 · Domingo</div>
+    </div>
+
+    <div class="day-header">
+      <div class="day-header-eyebrow">Dia 2 de 6</div>
+      <h1>Midtown Clássica + Memorial 9/11</h1>
+    </div>
+
+    <div class="summary-bar">
+      <div class="summary-item">
+        <div class="summary-label">Caminhada e ritmo</div>
+        <div class="summary-value">🚶 ~8-9 km · 🟡 Moderado</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">Chuva - flexibilidade</div>
+        <div class="summary-value">☔ Alta</div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <details class="overview-block flow-details" data-day="2" open>
+        <summary><span class="summary-title-group">📍 Fluxo do dia <span class="stop-count">10 paradas</span></span></summary>
+        <div class="route">
+        <div class="route-line"></div>
+
+        <div class="tl-row" data-step="hotel-out">
+          <div class="tl-time">08h30</div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">
+              <b>Saída do Hotel</b><br>
+              🚶 ~10-12 min a pé (~850m) pela 34th St até a <span class="address-chip">5ª Avenida</span>.
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="empire">
+          <div class="tl-time">09h00</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-time-label">🎟️ Reserva confirmada · 09h00</div>
+              <div class="flow-title">🏙️ Empire State Building</div>
+              <div class="flow-desc">Um dos observatórios mais famosos do mundo, com vista panorâmica de Manhattan.</div>
+              <div class="flow-tip"><span>💡</span> O primeiro horário da manhã costuma ter menos filas.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="empire">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~3 min até <span class="station-chip">34 St–Herald Sq</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="empire">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚇 Linha <b>N/R/W</b> (sentido Uptown) → <span class="station-chip">57 St–7 Av</span> (~8 min)</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="empire">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~3 min a pé (~234m) até o Blue Bottle</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="cafe">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">☕ Café</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="cafe">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row resto-trigger" data-resto="bluebottle">
+                <div class="store-info">
+                  <span class="store-name">☕ Blue Bottle Coffee</span>
+                  <span class="store-tag optional">toque para detalhes</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7630255,-73.9789147&query_place_id=ChIJAezVTMRZwokR9upQKsvI0H0" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.instagram.com/bluebottle/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="cafe">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~7 min a pé (~508m) até a Apple Store</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="fifthave">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🛍️ 5ª Avenida</div>
+              <div class="flow-desc">Lojas no caminho.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="fifthave">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row required">
+                <div class="store-info">
+                  <span class="store-name">🍎 Apple Fifth Avenue</span>
+                  <span class="store-tag required">obrigatória</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7638478,-73.9729785&query_place_id=ChIJp-0cdPBYwokRRNGjt9080k8" target="_blank" rel="noopener">📍</a>
+              </div>
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">👕 Uniqlo Fifth Avenue</span>
+                  <span class="store-tag optional">opcional · domingo abre 11h</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7604228,-73.9760834&query_place_id=ChIJb9oZ6vtYwokRqXuupoYdy1U" target="_blank" rel="noopener">📍</a>
+              </div>
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">🛍️ Saks Fifth Avenue</span>
+                  <span class="store-tag optional">opcional · domingo abre 12h</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.758138,-73.9772561&query_place_id=ChIJcQM7oP5YwokRvrQ8ty1ULps" target="_blank" rel="noopener">📍</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="fifthave">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~3 min a pé (~250m) até <span class="address-chip">St. Patrick's Cathedral</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="stpatricks">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">⛪ St. Patrick's Cathedral</div>
+              <div class="flow-desc">Principal catedral católica de Nova York e um dos ícones da 5ª Avenida.</div>
+              <div class="flow-tip"><span>🕒</span><span class="tip-text">Domingo: aproximadamente 08h30–18h45</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="stpatricks">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~2 min até o <span class="address-chip">Rockefeller Center</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="rockefeller">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🏙️ Rockefeller Center</div>
+              <div class="flow-desc">Complexo art déco conhecido pela praça central e pela estátua de Prometeu.</div>
+              <div class="flow-tip"><span>💡</span> Vale entrar no lobby do 30 Rockefeller Plaza (2–3 min).</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="rockefeller">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">🧱 LEGO Store</span>
+                  <span class="store-tag optional">opcional</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7591338,-73.9771693&query_place_id=ChIJk470xP5YwokRwm7bM8XAKho" target="_blank" rel="noopener">📍</a>
+              </div>
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">🎮 Nintendo New York</span>
+                  <span class="store-tag optional">opcional</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7580022,-73.9794385&query_place_id=ChIJ3RXu5f5YwokRta8Tcg07kwc" target="_blank" rel="noopener">📍</a>
+              </div>
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">🧸 FAO Schwarz</span>
+                  <span class="store-tag optional">opcional</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.758761,-73.979345&query_place_id=ChIJM-qBJWVZwokRZQwIoEESnEc" target="_blank" rel="noopener">📍</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="rockefeller">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="hook" data-scroll="gastronomia"><span class="hook-text">☕ Café?</span> <span class="arrow">Ver opções ›</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="rockefeller">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~8 min a pé (~650m) até a <span class="address-chip">Grand Central Terminal</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="grandcentral">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🚉 Grand Central Terminal</div>
+              <div class="flow-desc">Estação histórica famosa pelo teto constelar do Main Concourse (Gossip Girl — Serena retorna a Nova York na cena de abertura da série).</div>
+              <div class="flow-tip"><span>💡</span> Vale conhecer a Whispering Gallery ao lado do Oyster Bar.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="almoco">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🍔 Almoço</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="almoco">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row resto-trigger" data-resto="lostacos">
+                <div class="store-info">
+                  <span class="store-name">⭐ Los Tacos No. 1</span>
+                  <span class="store-tag optional">dentro do Grand Central Market</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.751501,-73.9777457&query_place_id=ChIJV2ahN11ZwokRCtz856h7EcQ" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.google.com/search?q=Los+Tacos+No.+1+Grand+Central+instagram" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="grandcentral">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~5 min a pé (~400m) até o <span class="address-chip">Bryant Park</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="bryantpark">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🌳 Bryant Park</div>
+              <div class="flow-desc">Parque urbano cercado por arranha-céus, perfeito para uma caminhada ou pausa rápida após o almoço.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="bryantpark">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~1 min até a <span class="address-chip">New York Public Library</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="nypl">
+          <div class="tl-time">13h00</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-time-label">🕒 Domingo: 13h00–17h00</div>
+              <div class="flow-title">📚 New York Public Library</div>
+              <div class="flow-desc">Uma das bibliotecas mais bonitas dos EUA (Sex and the City — casamento de Carrie e Mr. Big).</div>
+              <div class="flow-tip"><span>💡</span> O Rose Main Reading Room abre junto com a biblioteca às 13h.</div>
+              <div class="flow-tip"><span>⚠️</span><span class="tip-text">Confirmar horário de domingo direto no site oficial da NYPL antes da viagem — fontes divergem sobre funcionamento aos domingos.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="nypl">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~8 min a pé (~600m) até <span class="station-chip">Times Sq–42 St</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="nypl">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚇 Linha <b>1</b> (sentido Downtown) → <span class="station-chip">WTC Cortlandt</span> (~20-25 min)</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="nypl">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~3 min a pé até o <span class="address-chip">9/11 Memorial</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="memorial911">
+          <div class="tl-time">15h30</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🕊️ 9/11 Memorial</div>
+              <div class="flow-desc">Homenagem solene no local exato das antigas Torres Gêmeas.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="memorial911">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">⛲ Reflecting Pools</span>
+                  <span class="store-tag optional">nomes gravados em bronze</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7111026,-74.0130975&query_place_id=ChIJuywwGBpawokRCb31xeHV66I" target="_blank" rel="noopener">📍</a>
+              </div>
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">🌳 Survivor Tree</span>
+                  <span class="store-tag optional">símbolo de esperança</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7112025,-74.0135394&query_place_id=ChIJmQ0LGjVbwokR8vettwoqoX0" target="_blank" rel="noopener">📍</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="memorial911">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~2 min a pé até <span class="address-chip">The Oculus</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="oculus">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🕊️ The Oculus</div>
+              <div class="flow-desc">Estação de metrô futurista e centro de compras projetado por Santiago Calatrava — ótimo para fotos na parte interna.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="oculus">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~3 min a pé até <span class="station-chip">WTC Cortlandt</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="oculus">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚇 Linha <b>1</b> (sentido Uptown) → <span class="station-chip">Houston St</span> (~10 min)</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="jantar">
+          <div class="tl-time">17h30/18h00</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🍽️ Jantar</div>
+              <div class="flow-desc">Direto na volta pro hotel — a estação de Houston St fica a poucos passos.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="jantar">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row resto-trigger" data-resto="hamburgeramerica">
+                <div class="store-info">
+                  <span class="store-name">🍔 Hamburger America</span>
+                  <span class="store-tag optional">~3 min da estação Houston St</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7280142,-74.0025767&query_place_id=ChIJF8menphZwokR09y2oKUn8HQ" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.instagram.com/hamburgeramerica/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="jantar">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~3 min a pé de volta até <span class="station-chip">Houston St</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="jantar">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚇 Linha <b>1</b> (sentido Uptown) → <span class="station-chip">Times Sq–42 St</span> (~10 min)</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="hotel-back">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~10 min a pé (~700m) até o <span class="address-chip">hotel</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="hotel-back">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit"><b>Hotel</b> <span class="address-chip">333 W 38th St</span></div>
+          </div>
+        </div>
+        </div>
+      </details>
+
+      <div class="section-title">💡 Observações úteis</div>
+      <div class="simple-section">
+        <ul class="obs-list">
+          <li>🛍️ A caminhada pela 5ª Avenida no sentido Norte → Sul costuma ser mais agradável no fim da manhã.</li>
+          <li>🥐 O Grand Central Market é uma ótima opção para um snack, café ou produtos locais.</li>
+          <li>☔ Plano B (chuva forte): aproveite mais tempo nos ambientes internos do Rockefeller Center, Grand Central Terminal e New York Public Library.</li>
+        </ul>
+      </div>
+
+    </div>
+    <footer class="spacer"></footer>
+    <div class="return-chip" id="return-chip">↑ Voltar ao fluxo</div>
+  `;
+}
+
+/* ============================================================
+   DAY 3 — FULL CONTENT
+   ============================================================ */
+function renderDay3(){
+  return `
+    <div class="topbar">
+      <button class="back-btn" data-back>←</button>
+      <div class="topbar-title">21/09 · Segunda</div>
+    </div>
+
+    <div class="day-header">
+      <div class="day-header-eyebrow">Dia 3 de 6</div>
+      <h1>SoHo + Brooklyn</h1>
+    </div>
+
+    <div class="summary-bar">
+      <div class="summary-item">
+        <div class="summary-label">Caminhada e ritmo</div>
+        <div class="summary-value">🚶 ~12-13 km · 🔴 Muito Forte</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">Chuva - flexibilidade</div>
+        <div class="summary-value">☔ Baixa</div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <details class="overview-block flow-details" data-day="3" open>
+        <summary><span class="summary-title-group">📍 Fluxo do dia <span class="stop-count">9 paradas</span></span></summary>
+        <div class="route">
+        <div class="route-line"></div>
+
+        <div class="tl-row" data-step="hotel-out">
+          <div class="tl-time">09h15</div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">
+              <b>Saída do Hotel</b><br>
+              🚶 ~5 min a pé (~400m) até <span class="station-chip">42 St–Port Authority</span><br>
+              🚇 Linha <b>C</b> (sentido Downtown) → <span class="station-chip">Spring St</span> (~15 min)
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="hotel-out">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~2 min a pé (~150m) até o <span class="address-chip">Leon's Bagels</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="cafe">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">☕ Café</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="cafe">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row resto-trigger" data-resto="leonsbagels">
+                <div class="store-info">
+                  <span class="store-name">☕ Leon's Bagels</span>
+                  <span class="store-tag optional">toque para detalhes</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7208784,-73.9968333&query_place_id=ChIJKQWE8UZZwokRUFB32gGhH-Q" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.instagram.com/leonsbagelsnyc/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="cafe">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~3 min a pé (~230m) até o <span class="address-chip">SoHo</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="soho">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🛍️ SoHo</div>
+              <div class="flow-desc">Bairro famoso pelas fachadas de ferro fundido, galerias de arte e brechós de luxo.</div>
+              <div class="flow-tip"><span>💡</span><span class="tip-text">Saindo do SoHo por volta das 13h50 vocês chegam na Katz's certinho às 14h00 — já passado o pico do almoço, como planejado.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="soho">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row required">
+                <div class="store-info">
+                  <span class="store-name">👜 WGACA</span>
+                  <span class="store-tag required">obrigatória</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7227169,-74.002968&query_place_id=ChIJ6aFXg4tZwokRMsEXKwPpLTI" target="_blank" rel="noopener">📍</a>
+              </div>
+              <div class="store-row required">
+                <div class="store-info">
+                  <span class="store-name">👜 The RealReal SoHo</span>
+                  <span class="store-tag required">obrigatória</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7236549,-74.0012448&query_place_id=ChIJGyg_BYxZwokRd4xJ9el8IUk" target="_blank" rel="noopener">📍</a>
+              </div>
+              <div class="store-row required">
+                <div class="store-info">
+                  <span class="store-name">👜 Rebag SoHo</span>
+                  <span class="store-tag required">obrigatória</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7221565,-73.9992178&query_place_id=ChIJoV9SbAlZwokRo3ulbhSClfM" target="_blank" rel="noopener">📍</a>
+              </div>
+              <div class="store-row required">
+                <div class="store-info">
+                  <span class="store-name">👕 Uniqlo SoHo</span>
+                  <span class="store-tag required">obrigatória</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7234986,-73.9982019&query_place_id=ChIJ00Ji245ZwokRAOgx_6mR4ko" target="_blank" rel="noopener">📍</a>
+              </div>
+              <div class="store-row required">
+                <div class="store-info">
+                  <span class="store-name">🏬 Muji SoHo</span>
+                  <span class="store-tag required">obrigatória</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7207083,-74.0009746&query_place_id=ChIJ_6fuJYpZwokRiZR69KApcHc" target="_blank" rel="noopener">📍</a>
+              </div>
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">🍰 Eileen's Special Cheesecake</span>
+                  <span class="store-tag optional">opcional</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.721568,-73.9972582&query_place_id=ChIJaeOQ3IhZwokRgxPZEE3noAM" target="_blank" rel="noopener">📍</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="soho">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~5 min a pé (~400m) atravessando o Nolita a caminho da Katz's</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="almoco">
+          <div class="tl-time">14h00</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🍔 Almoço</div>
+              <div class="flow-tip"><span>💡</span> Horário estratégico: balcão e mesas bem mais tranquilos do que no pico do meio-dia.</div>
+              <div class="flow-tip"><span>💡</span> Guarde o bilhete de papel recebido na entrada — ele é obrigatório para pagar e sair.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="almoco">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row resto-trigger" data-resto="katz">
+                <div class="store-info">
+                  <span class="store-name">🥪 Katz's Delicatessen</span>
+                  <span class="store-tag optional">toque para detalhes</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.722233,-73.987429&query_place_id=ChIJCar0f49ZwokR6ozLV-dHNTE" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.instagram.com/katzsdeli/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="almoco">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~8 min a pé (~600m) rumo ao <span class="address-chip">Chinatown</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="chinatown">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🏮 Chinatown</div>
+              <div class="flow-desc">Maior bairro chinês de Nova York, com mercados de rua, templos e cultura tradicional.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="chinatown">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">🎨 Doyers Street</span>
+                  <span class="store-tag optional">opcional</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7143521,-73.9979432&query_place_id=ChIJ27bN9yZawokRc9Z6LnID29s" target="_blank" rel="noopener">📍</a>
+              </div>
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">🛕 Mahayana Temple</span>
+                  <span class="store-tag optional">opcional</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7161406,-73.9954181&query_place_id=ChIJaelA7ydawokR6vB9d0K6BHo" target="_blank" rel="noopener">📍</a>
+              </div>
+              <div class="store-row resto-trigger" data-resto="meilaiwah">
+                <div class="store-info">
+                  <span class="store-name">🥟 Mei Lai Wah</span>
+                  <span class="store-tag optional">opcional · toque para detalhes</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7151726,-73.9989063&query_place_id=ChIJM3elBidawokRJKPC55N6pQI" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.instagram.com/meilaiwahcoffeeshop/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">🌳 Columbus Park</span>
+                  <span class="store-tag optional">opcional</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7155504,-74.0000423&query_place_id=ChIJZQD10CZawokRCuvDW1oLE-Y" target="_blank" rel="noopener">📍</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="chinatown">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~10 min a pé (~750m) até a <span class="address-chip">Ponte do Brooklyn</span>, sentido City Hall</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="brooklynbridge">
+          <div class="tl-time">17h45</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🌉 Ponte do Brooklyn</div>
+              <div class="flow-desc">Ponte pênsil histórica de 1883 com vista espetacular do skyline.</div>
+              <div class="flow-tip"><span>💡</span> A travessia leva de 30 a 40 minutos em ritmo tranquilo.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="brooklynbridge">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~35 min a pé (~1.8km) atravessando a ponte até o <span class="address-chip">DUMBO</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="dumbo">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">📸 DUMBO &amp; Brooklyn Bridge Park</div>
+              <div class="flow-desc">Ângulo clássico da foto na Washington St (Manhattan Bridge ao fundo) e pôr do sol à beira-rio.</div>
+              <div class="flow-tip"><span>💡</span><span class="tip-text">Pôr do sol por volta das 19h00 nessa época do ano — comece a travessia por volta das 18h00-18h05 para chegar ao DUMBO com uns 20 min de folga antes da luz dourada.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="dumbo">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">📸 Washington St</span>
+                  <span class="store-tag optional">opcional</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7033165,-73.9895698&query_place_id=ChIJd9SPZTFawokRh9NpOTE-G5k" target="_blank" rel="noopener">📍</a>
+              </div>
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">🏖️ Pebble Beach</span>
+                  <span class="store-tag optional">opcional</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7043517,-73.9905712&query_place_id=ChIJ_5VyoV9bwokR__6-kSnld1A" target="_blank" rel="noopener">📍</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="dumbo">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~6 min a pé (~450m) até <span class="station-chip">High St</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="hotel-back">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚇 Linha <b>A/C</b> (sentido Uptown) → <span class="station-chip">42 St–Port Authority</span> (~18 min)</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="hotel-back">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit"><b>Hotel</b> <span class="address-chip">333 W 38th St</span></div>
+          </div>
+        </div>
+        </div>
+      </details>
+
+      <div class="section-title" id="gastronomia">🍽️ Gastronomia</div>
+      <div class="simple-section">
+        <div class="gastro-block"><b>🍽️ Jantar</b><br>
+          A definir — retorno direto ao hotel após o DUMBO
+        </div>
+      </div>
+      <div class="section-title">💡 Observações úteis</div>
+      <div class="simple-section">
+        <ul class="obs-list">
+          <li>👟 Calçado: dia de maior caminhada da viagem (~12 km), com piso de paralelepípedo no SoHo/DUMBO. Use o tênis com melhor amortecimento.</li>
+          <li>☔ Plano B (chuva forte): em vez de atravessar a pé sob chuva, vá de metrô (Linha A ou C) direto para o DUMBO e abrigue-se no Time Out Market ou no complexo Empire Stores.</li>
+        </ul>
+      </div>
+
+    </div>
+    <footer class="spacer"></footer>
+    <div class="return-chip" id="return-chip">↑ Voltar ao fluxo</div>
+  `;
+}
+
+/* ============================================================
+   DAY 4 — FULL CONTENT
+   ============================================================ */
+function renderDay4(){
+  return `
+    <div class="topbar">
+      <button class="back-btn" data-back>←</button>
+      <div class="topbar-title">22/09 · Terça</div>
+    </div>
+
+    <div class="day-header">
+      <div class="day-header-eyebrow">Dia 4 de 6</div>
+      <h1>Roosevelt Island + SUMMIT + Broadway</h1>
+    </div>
+
+    <div class="summary-bar">
+      <div class="summary-item">
+        <div class="summary-label">Caminhada e ritmo</div>
+        <div class="summary-value">🚶 ~8-9 km · 🟡 Moderado</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">Chuva - flexibilidade</div>
+        <div class="summary-value">☔ Alta</div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <details class="overview-block flow-details" data-day="4" open>
+        <summary><span class="summary-title-group">📍 Fluxo do dia <span class="stop-count">10 paradas</span></span></summary>
+        <div class="route">
+        <div class="route-line"></div>
+
+        <div class="tl-row" data-step="hotel-out">
+          <div class="tl-time">09h00</div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">
+              <b>Saída do Hotel</b><br>
+              🚶 ~10 min a pé (~700m) até <span class="station-chip">Times Sq–42 St</span><br>
+              🚇 Linha <b>E</b> (sentido Queens) → <span class="station-chip">Lexington Av/53 St</span> (~6 min)
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="hotel-out">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~5 min a pé (~400m) até o <span class="address-chip">Remi Flower &amp; Coffee</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="cafe">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">☕ Café</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="cafe">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row resto-trigger" data-resto="remi">
+                <div class="store-info">
+                  <span class="store-name">☕ Remi Flower &amp; Coffee</span>
+                  <span class="store-tag optional">toque para detalhes</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.753691,-73.9690791&query_place_id=ChIJY4SOj-JYwokRRSfg82cBwM0" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.instagram.com/remi.nyc/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="cafe">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~12 min a pé (~900m) subindo a 2nd Ave em linha reta</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="tram">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🚡 Roosevelt Island Tramway (Ida)</div>
+              <div class="flow-desc">Bonde aéreo histórico que cruza o East River oferecendo vista panorâmica dos arranha-céus de Midtown.</div>
+              <div class="flow-tip"><span>💡</span> Pague a catraca diretamente com o mesmo cartão/OMNY do metrô (mesmo valor da passagem).</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="tram">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚡 ~4 min de travessia</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="rooseveltisland">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🏝️ Roosevelt Island & Calçadão do East River</div>
+              <div class="flow-desc">Caminhada tranquila na orla da ilha com vista panorâmica para o skyline de Manhattan.</div>
+              <div class="flow-tip"><span>💡</span><span class="tip-text">O FDR Four Freedoms Park fecha às terças, mas todo o calçadão da orla fica aberto e oferece exatamente a mesma vista clássica.</span></div>
+              <div class="flow-tip"><span>💡</span> Reserve cerca de 1h para caminhar e fotografar a orla.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="rooseveltisland">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">📸 Promenade Sul</span>
+                  <span class="store-tag optional">vista da ONU e Chrysler Building</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7506105,-73.960524&query_place_id=ChIJRUgJkx9ZwokR6W8mnGZVcl0" target="_blank" rel="noopener">📍</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="rooseveltisland">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚡 ~4 min de travessia de volta a Manhattan</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="rooseveltisland">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~10-12 min a pé (~800m) até a <span class="address-chip">UrbanSpace Vanderbilt</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="almoco">
+          <div class="tl-time">12h45/13h00</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🍔 Almoço</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="almoco">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row resto-trigger" data-resto="urbanspace">
+                <div class="store-info">
+                  <span class="store-name">🍔 UrbanSpace Vanderbilt</span>
+                  <span class="store-tag optional">toque para detalhes</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7543604,-73.9761919&query_place_id=ChIJXSh7-f1YwokR5MTjegK5cGQ" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.instagram.com/vanderbiltmarketnyc/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="almoco">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~3-4 min a pé (~280m) até o <span class="address-chip">SUMMIT One Vanderbilt</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="summit">
+          <div class="tl-time">14h00</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-time-label">🎟️ Reserva confirmada · 14h00</div>
+              <div class="flow-title">🏙️ SUMMIT One Vanderbilt</div>
+              <div class="flow-desc">Observatório imersivo e espelhado no topo do arranha-céu, unindo arte, reflexos e vista panorâmica.</div>
+              <div class="flow-tip"><span>💡</span> Os armários (lockers) são gratuitos para objetos pequenos.</div>
+              <div class="flow-tip"><span>💡</span> Leve óculos de sol (reflexo intenso nos espelhos) e evite vestidos/saias por conta do chão espelhado.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="summit">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~10-12 min a pé (~800m) até o <span class="address-chip">hotel</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="hotelbreak">
+          <div class="tl-time">16h45</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🛎️ Hotel — pausa pré-teatro</div>
+              <div class="flow-desc">Banho e descanso antes de sair para o jantar e o teatro.</div>
+              <div class="flow-tip"><span>💡</span><span class="tip-text">Saída sugerida às 16h45 — calculada pela opção mais distante (OBAO, ~20-22 min a pé) com margem de segurança para chegar às 17h15. Se optarem pelo Junior's (mais perto, ~8-9 min), sobra ainda mais folga.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="hotelbreak">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~10-15 min a pé até o restaurante escolhido (varia conforme a opção)</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="jantar">
+          <div class="tl-time">17h15</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🍽️ Jantar</div>
+              <div class="flow-desc">Duas opções por perto — escolham na hora conforme a vontade.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="jantar">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row resto-trigger" data-resto="obao">
+                <div class="store-info">
+                  <span class="store-name">🥢 OBAO</span>
+                  <span class="store-tag optional">opção 1 · toque para detalhes</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7606458,-73.9913281&query_place_id=ChIJQZko0FNYwokRjhh4z0ilUMw" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.instagram.com/obao_ny/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+              <div class="store-row resto-trigger" data-resto="juniors">
+                <div class="store-info">
+                  <span class="store-name">🍰 Junior's Restaurant</span>
+                  <span class="store-tag optional">opção 2 · toque para detalhes</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7583331,-73.9866367&query_place_id=ChIJv8YTWFRYwokRkTUSNDg04Y4" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.instagram.com/juniorscheesecake/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="jantar">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~5-8 min a pé até o <span class="address-chip">New Amsterdam Theatre</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="theater">
+          <div class="tl-time">18h30</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-time-label">🎟️ Ingresso garantido · Espetáculo às 19h00</div>
+              <div class="flow-title">🎭 Broadway - Aladdin (New Amsterdam Theatre)</div>
+              <div class="flow-tip"><span>💡</span> Chegue entre 18h20 e 18h30 para passar pela segurança e se acomodar sem correria.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="theater">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~5 min a pé até a <span class="address-chip">Times Square</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="timessquare">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🏙️ Times Square à Noite</div>
+              <div class="flow-desc">Passeio rápido pelas luzes e pela escadaria vermelha ao sair do teatro.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="timessquare">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~10 min a pé (~750m) até o hotel</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="hotel-back">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit"><b>Hotel</b> <span class="address-chip">333 W 38th St</span></div>
+          </div>
+        </div>
+        </div>
+      </details>
+
+      <div class="section-title">💡 Observações úteis</div>
+      <div class="simple-section">
+        <ul class="obs-list">
+          <li>🎭 Logística prática: todo o trajeto do fim da tarde (Hotel → Jantar → Teatro → Times Square → Hotel) é 100% feito a pé.</li>
+          <li>☔ Plano B (chuva forte): o SUMMIT, o food hall e o teatro são atrações 100% cobertas.</li>
+        </ul>
+      </div>
+
+    </div>
+    <footer class="spacer"></footer>
+    <div class="return-chip" id="return-chip">↑ Voltar ao fluxo</div>
+  `;
+}
+
+/* ============================================================
+   DAY 5 — FULL CONTENT
+   ============================================================ */
+function renderDay5(){
+  return `
+    <div class="topbar">
+      <button class="back-btn" data-back>←</button>
+      <div class="topbar-title">23/09 · Quarta</div>
+    </div>
+
+    <div class="day-header">
+      <div class="day-header-eyebrow">Dia 5 de 6</div>
+      <h1>Estátua da Liberdade + FiDi Histórico &amp; Seaport</h1>
+    </div>
+
+    <div class="summary-bar">
+      <div class="summary-item">
+        <div class="summary-label">Caminhada e ritmo</div>
+        <div class="summary-value">🚶 ~6-7 km · 🟡 Moderado</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">Chuva - flexibilidade</div>
+        <div class="summary-value">☔ Baixa (manhã)</div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <details class="overview-block flow-details" data-day="5" open>
+        <summary><span class="summary-title-group">📍 Fluxo do dia <span class="stop-count">7 paradas</span></span></summary>
+        <div class="route">
+        <div class="route-line"></div>
+
+        <div class="tl-row" data-step="hotel-out">
+          <div class="tl-time">08h30</div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">
+              <b>Saída do Hotel</b><br>
+              🚶 ~10 min a pé até <span class="station-chip">Times Sq–42 St</span><br>
+              🚇 Linha <b>1</b> (sentido Downtown) → <span class="station-chip">South Ferry</span> (~20 min)<br>
+              🚶 ~3 min a pé até o <span class="address-chip">Battery Park</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="liberty">
+          <div class="tl-time">09h30</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-time-label">🎟️ Ingresso reservado · Statue City Cruises</div>
+              <div class="flow-title">🗽 Estátua da Liberdade &amp; Ellis Island</div>
+              <div class="flow-desc">Circuito completo — Liberty Island e Ellis Island.</div>
+              <div class="flow-tip"><span>💡</span> Chegue às 09h00 (30 min antes) para a fila do raio-X no Castle Clinton.</div>
+              <div class="flow-tip"><span>💡</span> Reserve ~3h30 para o circuito completo.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="liberty">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚡 Balsa de volta para Manhattan (desembarque no Battery Park)</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="liberty">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~5 min a pé (~400m) até o <span class="address-chip">Stone Street</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="almoco">
+          <div class="tl-time">13h30/14h00</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🍽️ Almoço</div>
+              <div class="flow-desc">Caminhada pela Stone Street (paralelepípedos) até a taverna histórica de 1762.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="almoco">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row resto-trigger" data-resto="frauncestavern">
+                <div class="store-info">
+                  <span class="store-name">🍽️ Fraunces Tavern</span>
+                  <span class="store-tag optional">toque para detalhes</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7034181,-74.0113649&query_place_id=ChIJn-PPbBRawokR3o5lQeBaB_w" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.google.com/search?q=Fraunces+Tavern+instagram" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="almoco">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~4 min a pé (~300m) subindo sentido norte, até o <span class="address-chip">Charging Bull</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="wallstreet">
+          <div class="tl-time">15h15</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">📈 Circuito Histórico de Wall Street</div>
+              <div class="flow-desc">Fachadas monumentais e história dos EUA concentradas em poucas quadras.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="wallstreet">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">🐂 Charging Bull &amp; Fearless Girl</span>
+                  <span class="store-tag optional">opcional</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7055746,-74.0134499&query_place_id=ChIJURWoF5pYwokRIfXv4To528c" target="_blank" rel="noopener">📍</a>
+              </div>
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">🏛️ NYSE</span>
+                  <span class="store-tag optional">opcional</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.706877,-74.0112654&query_place_id=ChIJodiAGRZawokRHXCBqdWXV54" target="_blank" rel="noopener">📍</a>
+              </div>
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">📜 Federal Hall</span>
+                  <span class="store-tag optional">opcional</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7073993,-74.0102088&query_place_id=ChIJAaIFAxdawokR8txc3YPbD3A" target="_blank" rel="noopener">📍</a>
+              </div>
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">⛪ Trinity Church</span>
+                  <span class="store-tag optional">opcional</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7078931,-74.0117901&query_place_id=ChIJbVfZzhBawokRnmCT-muojBA" target="_blank" rel="noopener">📍</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="wallstreet">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~8 min a pé (~600m) sentido leste até a orla</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="seaport">
+          <div class="tl-time">16h30</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🌊 South Street Seaport &amp; Pier 17</div>
+              <div class="flow-desc">Caminhada relaxante pelo pier de madeira com vista panorâmica da Ponte do Brooklyn.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="seaport">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~5 min a pé (~400m) até o jantar</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="jantar">
+          <div class="tl-time">17h30</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🍽️ Jantar — Happy Hour Final</div>
+              <div class="flow-desc">Duas opções bem próximas — escolham na hora conforme a vontade.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="jantar">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row resto-trigger" data-resto="deadrabbit">
+                <div class="store-info">
+                  <span class="store-name">🍺 The Dead Rabbit</span>
+                  <span class="store-tag optional">opção 1 · pub premiado</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7032685,-74.0110218&query_place_id=ChIJIRiJaRRawokR2KyQ984qa-o" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.google.com/search?q=The+Dead+Rabbit+NYC+instagram" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+              <div class="store-row resto-trigger" data-resto="harrysside">
+                <div class="store-info">
+                  <span class="store-name">🦪 Harry's Side Bar</span>
+                  <span class="store-tag optional">opção 2 · clássico do FiDi</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7044966,-74.0098862&query_place_id=ChIJTXXOF-1bwokRmT5WZCpK8EU" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.google.com/search?q=Harry%27s+Side+Bar+NYC+instagram" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="jantar">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~5 min a pé até a estação <span class="station-chip">Wall St</span> ou <span class="station-chip">Fulton St</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="hotel-back">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚇 Linha <b>2/3, 1</b> ou <b>A/C</b> (sentido Uptown) → retorno ao hotel (~20 min)</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="hotel-back">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit"><b>Hotel</b> <span class="address-chip">333 W 38th St</span></div>
+          </div>
+        </div>
+        </div>
+      </details>
+
+      <div class="section-title">💡 Observações úteis</div>
+      <div class="simple-section">
+        <ul class="obs-list">
+          <li>☕ Café da manhã: reforçado antes de sair do hotel, ou algo rápido a caminho do Battery Park.</li>
+          <li>📄 Federal Hall fecha às segundas e terças — na quarta (dia da visita) funciona normalmente, 10h-16h.</li>
+          <li>☔ Plano B (chuva forte): a manhã (balsa/ilhas) tem baixa flexibilidade — outdoor e exposto ao tempo. A tarde (Wall Street, Seaport) é mais fácil de adaptar ou encurtar.</li>
+        </ul>
+      </div>
+
+    </div>
+    <footer class="spacer"></footer>
+    <div class="return-chip" id="return-chip">↑ Voltar ao fluxo</div>
+  `;
+}
+
+/* ============================================================
+   DAY 6 — FULL CONTENT
+   ============================================================ */
+function renderDay6(){
+  return `
+    <div class="topbar">
+      <button class="back-btn" data-back>←</button>
+      <div class="topbar-title">24/09 · Quinta</div>
+    </div>
+
+    <div class="day-header">
+      <div class="day-header-eyebrow">Dia 6 de 6</div>
+      <h1>Hudson Yards + High Line + Villages</h1>
+    </div>
+
+    <div class="summary-bar">
+      <div class="summary-item">
+        <div class="summary-label">Caminhada e ritmo</div>
+        <div class="summary-value">🚶 ~8-9 km · 🟡 Moderado</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">Chuva - flexibilidade</div>
+        <div class="summary-value">🟢 Alta</div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <details class="overview-block flow-details" data-day="6" open>
+        <summary><span class="summary-title-group">📍 Fluxo do dia <span class="stop-count">9 paradas</span></span></summary>
+        <div class="route">
+        <div class="route-line"></div>
+
+        <div class="tl-row" data-step="hotel-out">
+          <div class="tl-time">10h00</div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">
+              <b>Saída do Hotel</b><br>
+              🚶 ~10 min a pé (~850m) até <span class="address-chip">Hudson Yards</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="vessel">
+          <div class="tl-time">10h15</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🏙️ Vessel</div>
+              <div class="flow-desc">Estrutura futurista composta por 154 escadarias interligadas, um dos marcos arquitetônicos mais modernos de Nova York.</div>
+              <div class="flow-tip"><span>💡</span> Vale a pena conhecer a praça e tirar fotos mesmo sem subir na estrutura.</div>
+              <div class="flow-tip"><span>⚠️</span><span class="tip-text">Não dá mais para subir até o topo — algumas áreas de mirante têm redes de proteção instaladas. Ainda vale pela arquitetura e pelas fotos.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="vessel">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~2 min até a <span class="address-chip">High Line</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="highline">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🌿 The High Line</div>
+              <div class="flow-desc">Parque suspenso construído sobre uma antiga linha férrea elevada, com jardins, obras de arte e vistas diferentes de Manhattan.</div>
+              <div class="flow-tip"><span>💡</span> Percorra o parque no sentido sul até a região do Chelsea Market.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="highline">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~15-20 min até o <span class="address-chip">Chelsea Market</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="chelseamarket">
+          <div class="tl-time">11h30/11h45</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🍽️ Chelsea Market</div>
+              <div class="flow-desc">Mercado gastronômico instalado em uma antiga fábrica da Nabisco, com dezenas de restaurantes e lojas independentes.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="chelseamarket">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row resto-trigger" data-resto="lobsterplace">
+                <div class="store-info">
+                  <span class="store-name">🦞 Lobster Place</span>
+                  <span class="store-tag optional">lobster roll e ostras</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.742553,-74.006052&query_place_id=ChIJw2lMFL9ZwokRXmhKDX7Chxs" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.instagram.com/lobsterplacenyc/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+              <div class="store-row resto-trigger" data-resto="friedmans">
+                <div class="store-info">
+                  <span class="store-name">🔄 Friedman's</span>
+                  <span class="store-tag optional">recomendação — comfort food americana</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.742693,-74.0062283&query_place_id=ChIJw2lMFL9ZwokRyO_5o2VT8os" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.instagram.com/friedmansnyc/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="chelseamarket">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~5 min até o <span class="address-chip">Meatpacking District</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="meatpacking">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🛍️ Meatpacking District &amp; Little Island</div>
+              <div class="flow-desc">Antiga região industrial transformada em um dos bairros mais descolados de Manhattan.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="meatpacking">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~10 min até o <span class="address-chip">West Village</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="westvillage">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🏡 West Village</div>
+              <div class="flow-desc">Um dos bairros mais charmosos de Nova York, conhecido pelas ruas arborizadas, brownstones e cafés.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="westvillage">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">📸 Perry St (Carrie Bradshaw House)</span>
+                  <span class="store-tag optional">opcional</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7353767,-74.0038599&query_place_id=ChIJ4W_ZOwBZwokRnMAYX46tTJA" target="_blank" rel="noopener">📍</a>
+              </div>
+              <div class="store-row resto-trigger" data-resto="magnoliabakery">
+                <div class="store-info">
+                  <span class="store-name">🧁 Magnolia Bakery</span>
+                  <span class="store-tag optional">toque para detalhes</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7358946,-74.00491&query_place_id=ChIJF9Du35RZwokRFGd0oc4diZs" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.instagram.com/magnoliabakery/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">🛍️ Bleecker Street</span>
+                  <span class="store-tag optional">opcional</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7358946,-74.00491&query_place_id=ChIJF9Du35RZwokRFGd0oc4diZs" target="_blank" rel="noopener">📍</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="westvillage">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~15 min até o <span class="address-chip">Washington Square Park</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="washingtonsquare">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🌳 Washington Square Park</div>
+              <div class="flow-desc">O coração de Greenwich Village, famoso pelo arco, fonte central, músicos de rua e atmosfera universitária da NYU.</div>
+              <div class="flow-tip"><span>💡</span> Um ótimo lugar para descansar e observar o movimento do bairro.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="washingtonsquare">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~10 min até o jantar</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="jantar">
+          <div class="tl-time">18h30</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🍽️ Jantar</div>
+              <div class="flow-desc">A unidade do West Village se encaixa perfeitamente no final do percurso, sem deslocamentos extras.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="jantar">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row resto-trigger" data-resto="lindustriewv">
+                <div class="store-info">
+                  <span class="store-name">🍕 L'Industrie Pizzeria — West Village</span>
+                  <span class="store-tag optional">toque para detalhes</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7332224,-74.0049081&query_place_id=ChIJ92OsaJVZwokRsC54kf-J-3g" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.instagram.com/lindustrielt/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="jantar">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚇 Linha <b>A/C/E</b> (West 4 St) → <span class="station-chip">34 St–Penn Station</span> (~8 min)</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="hotel-back">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~8 min até o <span class="address-chip">hotel</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="hotel-back">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit"><b>Hotel</b> <span class="address-chip">333 W 38th St</span></div>
+          </div>
+        </div>
+        </div>
+      </details>
+
+      <div class="section-title">💡 Observações úteis</div>
+      <div class="simple-section">
+        <ul class="obs-list">
+          <li>🚶 Este é o dia mais agradável para caminhar sem pressa pela cidade.</li>
+          <li>🌿 A High Line deve ser percorrida no sentido norte → sul, aproveitando melhor o fluxo natural até o Chelsea Market.</li>
+          <li>🏡 Reserve tempo para explorar as ruas do West Village sem roteiro rígido — muitas das melhores descobertas acontecem ali.</li>
+        </ul>
+      </div>
+
+    </div>
+    <footer class="spacer"></footer>
+    <div class="return-chip" id="return-chip">↑ Voltar ao fluxo</div>
+  `;
+}
+</script>
+</body>
+</html>
