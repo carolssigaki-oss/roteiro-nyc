@@ -1441,7 +1441,8 @@ function render(){
 const HOTEL = { lat:40.755553, lng:-73.993031, placeId:"ChIJM3IUOK1ZwokRmgyn41pFrtE" };
 
 function mapsPlaceUrl(map){
-  return `https://www.google.com/maps/search/?api=1&query=${map.lat},${map.lng}&query_place_id=${map.placeId}`;
+  const base = `https://www.google.com/maps/search/?api=1&query=${map.lat},${map.lng}`;
+  return map.placeId ? `${base}&query_place_id=${map.placeId}` : base;
 }
 
 const STEPS_BY_DAY = {
@@ -1531,7 +1532,8 @@ STEPS_BY_DAY["5"] = [
   { key:"liberty", name:"🗽 Estátua da Liberdade & Ellis Island", description:"Statue City Cruises — circuito completo.", node:"solid",
     map:{ lat:40.7019423, lng:-74.0165238, placeId:"ChIJex6ai6pbwokRbh3cz6wKQ0w" } },
   { key:"almoco", name:"🍽️ Almoço", description:"Fraunces Tavern.", node:"solid" },
-  { key:"wallstreet", name:"📈 Circuito Histórico de Wall Street", description:"Charging Bull, NYSE, Federal Hall e Trinity Church.", node:"solid", duration:"1h–1h15" },
+  { key:"wallstreet", name:"📈 Circuito Histórico de Wall Street", description:"Charging Bull, NYSE, Federal Hall e Trinity Church.", node:"solid", duration:"1h–1h15",
+    map:{ lat:40.7073993, lng:-74.0102088 } },
   { key:"seaport", name:"🌊 South Street Seaport & Pier 17", description:"Caminhada pelo pier com vista da Ponte do Brooklyn.", node:"solid", duration:"30–45 min",
     map:{ lat:40.705573, lng:-74.0014567, placeId:"ChIJR1pTRTxawokRyzoX5XQ_alI" } },
   { key:"jantar", name:"🍽️ Jantar", description:"The Dead Rabbit ou Harry's Side Bar.", node:"solid" },
@@ -1545,10 +1547,12 @@ STEPS_BY_DAY["6"] = [
     map:{ lat:40.7538073, lng:-74.0021537, placeId:"ChIJqygAFrRZwokRwF0VrBoXS0E" } },
   { key:"highline", name:"🌿 The High Line", description:"Parque suspenso sobre uma antiga linha férrea elevada.", node:"solid",
     map:{ lat:40.7528349, lng:-74.0022969, placeId:"ChIJw75hJQBZwokRWP6ab1XHN04" } },
-  { key:"chelseamarket", name:"🍽️ Chelsea Market", description:"Mercado gastronômico numa antiga fábrica da Nabisco.", node:"solid" },
+  { key:"chelseamarket", name:"🍽️ Chelsea Market", description:"Mercado gastronômico numa antiga fábrica da Nabisco.", node:"solid",
+    map:{ lat:40.7424396, lng:-74.0061439 } },
   { key:"meatpacking", name:"🛍️ Meatpacking District & Little Island", description:"Antiga região industrial, hoje um dos bairros mais descolados de Manhattan.", node:"solid",
     map:{ lat:40.7420024, lng:-74.010299, placeId:"ChIJL-CJmTFZwokRsPcqje_bn7w" } },
-  { key:"westvillage", name:"🏡 West Village", description:"Ruas arborizadas, brownstones e cafés charmosos.", node:"solid" },
+  { key:"westvillage", name:"🏡 West Village", description:"Ruas arborizadas, brownstones e cafés charmosos.", node:"solid",
+    map:{ lat:40.73468, lng:-74.0047554 } },
   { key:"washingtonsquare", name:"🌳 Washington Square Park", description:"O coração de Greenwich Village, com o arco e a atmosfera universitária da NYU.", node:"solid",
     map:{ lat:40.7308838, lng:-73.997332, placeId:"ChIJjX494pBZwokRGH620d9eYfo" } },
   { key:"jantar", name:"🍽️ Jantar", description:"L'Industrie Pizzeria — West Village.", node:"solid" },
