@@ -1614,7 +1614,7 @@ function buildFlowSteps(){
       .find(Boolean) || "";
 
     const mapIconHtml = step.map
-      ? `<a class="maps-icon-btn" href="${mapsPlaceUrl(step.map)}" target="_blank" rel="noopener" aria-label="Abrir ${step.name.replace(/<[^>]+>/g,"")} no Google Maps">📍</a>`
+      ? `<a class="maps-icon-btn" href="${mapsPlaceUrl(step.map)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" aria-label="Abrir ${step.name.replace(/<[^>]+>/g,"")} no Google Maps">📍</a>`
       : "";
 
     const durationHtml = step.duration
@@ -1624,15 +1624,6 @@ function buildFlowSteps(){
     const row = document.createElement("div");
     row.className = "tl-row";
     row.innerHTML = `<div class="tl-time"></div><div class="tl-node"><div class="dot ${step.node === "hollow" ? "hollow" : ""}"></div></div><div class="tl-content"><details class="flow-step"><summary><span class="step-actions">${mapIconHtml}<span class="step-chevron">⌄</span></span><span class="step-summary">${time ? `<span class="step-time">${time}</span>` : ""}<strong>${step.name}</strong><span> — ${step.chip ? `<span class="${step.chip}-chip">${step.description}</span>` : step.description}</span></span></summary><div class="flow-step-body">${durationHtml}${contentHolder.innerHTML}</div></details></div>`;
-
-    const mapBtn = row.querySelector(".maps-icon-btn");
-    if(mapBtn){
-      mapBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        window.open(mapBtn.href, "_blank", "noopener");
-      });
-    }
 
     list.appendChild(row);
   });
@@ -1714,7 +1705,7 @@ function badgeClass(ritmo){
 function renderLanding(){
   return `
     <div class="macro-header">
-      <div class="macro-eyebrow">Roteiro NYC · 19–24 Set</div>
+      <div class="macro-eyebrow">Planejamento · 19–24 Set</div>
       <div class="macro-title">Nova York</div>
       <div class="macro-sub">Escolha o que quer ver.</div>
     </div>
@@ -1722,7 +1713,7 @@ function renderLanding(){
       <div class="landing-card" data-nav="#/cronograma">
         <div class="landing-card-icon">📅</div>
         <div class="landing-card-text">
-          <div class="landing-card-title">Cronograma</div>
+          <div class="landing-card-title">Roteiros</div>
           <div class="landing-card-sub">O roteiro dia a dia, com fluxo, horários e deslocamento.</div>
         </div>
         <div class="day-chevron">›</div>
@@ -1832,8 +1823,8 @@ function renderMacro(){
     </div>
 
     <div class="macro-header">
-      <div class="macro-eyebrow">Roteiro NYC · 19–24 Set</div>
-      <div class="macro-title">Cronograma da semana</div>
+      <div class="macro-eyebrow">Planejamento · 19–24 Set</div>
+      <div class="macro-title">Roteiros da semana</div>
       <div class="macro-sub">Toque em um dia para ver o roteiro completo.</div>
     </div>
     <div class="day-list">
