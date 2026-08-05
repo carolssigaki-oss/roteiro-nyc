@@ -99,6 +99,11 @@
     padding:22px max(20px, calc((100% - 640px) / 2 + 20px)) 22px;
     position:relative;
   }
+  /* Quando é a primeira coisa da tela (só a Home tem esse caso — as
+     outras têm uma .topbar acima que já cuida do notch/status bar) */
+  #app > .macro-header:first-child{
+    padding-top:calc(22px + env(safe-area-inset-top));
+  }
   .macro-eyebrow{
     font-family:ui-monospace, monospace;
     font-size:11px; letter-spacing:0.12em; text-transform:uppercase;
@@ -688,6 +693,15 @@
     color:var(--mta-blue);
     font-size:12px;
     flex-shrink:0;
+    position:relative;
+  }
+  /* Alvo de toque invisível maior (~40px), sem mudar o visual do ícone */
+  .maps-icon-btn::after,
+  .ig-icon-btn::after,
+  .modal-close::after{
+    content:"";
+    position:absolute;
+    inset:-8px;
   }
   .maps-icon-btn:active{ background:#D9E7FF; }
 
@@ -702,6 +716,7 @@
     color:#C2185B;
     font-size:12px;
     flex-shrink:0;
+    position:relative;
     margin-left:6px;
   }
   .ig-icon-btn:active{ background:#F9D3E3; }
@@ -910,6 +925,32 @@
     opacity:1;
     pointer-events:auto;
   }
+
+  /* Offline toast — some quando um link externo (Maps/Instagram) é
+     tocado sem internet, some sozinho depois de alguns segundos */
+  .offline-toast{
+    position:fixed;
+    left:50%;
+    top:calc(14px + env(safe-area-inset-top));
+    transform:translateX(-50%) translateY(-20px);
+    background:var(--brand-dark);
+    color:var(--brand-light);
+    padding:11px 18px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:600;
+    box-shadow:0 6px 20px rgba(18,32,61,0.35);
+    z-index:200;
+    opacity:0;
+    pointer-events:none;
+    transition:transform 0.25s ease, opacity 0.25s ease;
+    max-width:calc(100% - 32px);
+    text-align:center;
+  }
+  .offline-toast.show{
+    transform:translateX(-50%) translateY(0);
+    opacity:1;
+  }
 </style>
 </head>
 <body>
@@ -917,6 +958,8 @@
 <div id="app"></div>
 
 <button id="back-to-top-btn" class="back-to-top-btn" aria-label="Voltar ao topo">↑</button>
+
+<div id="offline-toast" class="offline-toast" role="status" aria-live="polite">📡 Sem conexão — tente de novo quando estiver online</div>
 
 <div class="modal-overlay" id="resto-modal-overlay">
   <div class="modal-sheet" id="resto-modal-sheet">
@@ -1214,6 +1257,15 @@ function closeRestoModal(){
   document.body.style.overflow = "";
 }
 
+let offlineToastTimer = null;
+function showOfflineToast(){
+  const toast = document.getElementById("offline-toast");
+  if(!toast) return;
+  toast.classList.add("show");
+  clearTimeout(offlineToastTimer);
+  offlineToastTimer = setTimeout(() => toast.classList.remove("show"), 2800);
+}
+
 /* ============================================================
    ATRAÇÕES — categorização + modal (reaproveita STEPS_BY_DAY)
    ============================================================ */
@@ -1321,6 +1373,18 @@ function openAttractionModal(key){
   document.body.style.overflow = "hidden";
 }
 
+// Fase de captura: roda antes de qualquer stopPropagation nos botões de
+// pin/Instagram (que usam isso pra não abrir o card por trás), então
+// sempre consegue interceptar o clique pra avisar que está offline.
+document.addEventListener("click", (e) => {
+  const extLink = e.target.closest('a[target="_blank"]');
+  if(extLink && "onLine" in navigator && !navigator.onLine){
+    e.preventDefault();
+    e.stopPropagation();
+    showOfflineToast();
+  }
+}, true);
+
 document.addEventListener("click", (e) => {
   const trigger = e.target.closest("[data-resto]");
   if(trigger){
@@ -1344,12 +1408,13 @@ document.addEventListener("keydown", (e) => {
 });
 
 /* ============================================================
-   BACK TO TOP — aparece ao rolar, só nas telas de dia
+   BACK TO TOP — aparece ao rolar, nas telas de dia, gastronomia
+   e atrações (as telas longas de rolar)
    ============================================================ */
 window.addEventListener("scroll", () => {
   const btn = document.getElementById("back-to-top-btn");
   if(!btn) return;
-  const onDayPage = /^#\/dia\//.test(window.location.hash);
+  const onDayPage = /^#\/(dia\/|gastronomia|atracoes)/.test(window.location.hash);
   if(onDayPage && window.scrollY > 500){
     btn.classList.add("show");
   } else {
@@ -1655,6 +1720,17 @@ function attachHandlers(){
       }
     });
   });
+  document.querySelectorAll(".resto-trigger").forEach(el=>{
+    el.setAttribute("role","button");
+    el.setAttribute("tabindex","0");
+    el.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        if(el.hasAttribute("data-resto")) openRestoModal(el.getAttribute("data-resto"));
+        else if(el.hasAttribute("data-attraction")) openAttractionModal(el.getAttribute("data-attraction"));
+      }
+    });
+  });
   document.querySelectorAll("[data-scroll]").forEach(el=>{
     el.setAttribute("role","button");
     el.setAttribute("tabindex","0");
@@ -1686,8 +1762,25 @@ function showReturnChip(){
   if(chip) chip.classList.add("show");
 }
 
-window.addEventListener("hashchange", render);
-window.addEventListener("DOMContentLoaded", render);
+window.addEventListener("hashchange", () => {
+  try { localStorage.setItem("lastHash", window.location.hash); } catch(e){}
+  render();
+});
+
+window.addEventListener("DOMContentLoaded", () => {
+  // Abriu direto pelo ícone da tela de início (sem hash) — volta pra
+  // onde a pessoa tinha parado, em vez de sempre reiniciar no menu.
+  if(!window.location.hash || window.location.hash === "#/"){
+    try {
+      const saved = localStorage.getItem("lastHash");
+      if(saved && saved !== "#/" && saved !== "#"){
+        window.location.hash = saved;
+        return; // o hashchange acima já dispara o render()
+      }
+    } catch(e){}
+  }
+  render();
+});
 
 /* ============================================================
    MACRO SCREEN
@@ -1780,7 +1873,7 @@ function renderAtracoes(){
 
   return `
     <div class="topbar">
-      <button class="back-btn" data-back>←</button>
+      <button class="back-btn" data-back aria-label="Voltar">←</button>
     </div>
 
     <div class="day-header">
@@ -1819,7 +1912,7 @@ function renderMacro(){
 
   return `
     <div class="topbar">
-      <button class="back-btn" data-back>←</button>
+      <button class="back-btn" data-back aria-label="Voltar">←</button>
     </div>
 
     <div class="macro-header">
@@ -1881,7 +1974,7 @@ function renderGastronomia(){
 
   return `
     <div class="topbar">
-      <button class="back-btn" data-back>←</button>
+      <button class="back-btn" data-back aria-label="Voltar">←</button>
     </div>
 
     <div class="day-header">
@@ -1902,7 +1995,7 @@ function renderGastronomia(){
 function renderEmptyDay(day){
   return `
     <div class="topbar">
-      <button class="back-btn" data-back>←</button>
+      <button class="back-btn" data-back aria-label="Voltar">←</button>
       <div class="topbar-title">${day.date}</div>
     </div>
     <div class="day-header">
@@ -1922,7 +2015,7 @@ function renderEmptyDay(day){
 function renderDay1(){
   return `
     <div class="topbar">
-      <button class="back-btn" data-back>←</button>
+      <button class="back-btn" data-back aria-label="Voltar">←</button>
       <div class="topbar-title">19/09 · Sábado</div>
     </div>
 
@@ -2174,7 +2267,7 @@ function renderDay1(){
 function renderDay2(){
   return `
     <div class="topbar">
-      <button class="back-btn" data-back>←</button>
+      <button class="back-btn" data-back aria-label="Voltar">←</button>
       <div class="topbar-title">20/09 · Domingo</div>
     </div>
 
@@ -2673,7 +2766,7 @@ function renderDay2(){
 function renderDay3(){
   return `
     <div class="topbar">
-      <button class="back-btn" data-back>←</button>
+      <button class="back-btn" data-back aria-label="Voltar">←</button>
       <div class="topbar-title">21/09 · Segunda</div>
     </div>
 
@@ -3033,7 +3126,7 @@ function renderDay3(){
 function renderDay4(){
   return `
     <div class="topbar">
-      <button class="back-btn" data-back>←</button>
+      <button class="back-btn" data-back aria-label="Voltar">←</button>
       <div class="topbar-title">22/09 · Terça</div>
     </div>
 
@@ -3378,7 +3471,7 @@ function renderDay4(){
 function renderDay5(){
   return `
     <div class="topbar">
-      <button class="back-btn" data-back>←</button>
+      <button class="back-btn" data-back aria-label="Voltar">←</button>
       <div class="topbar-title">23/09 · Quarta</div>
     </div>
 
@@ -3648,7 +3741,7 @@ function renderDay5(){
 function renderDay6(){
   return `
     <div class="topbar">
-      <button class="back-btn" data-back>←</button>
+      <button class="back-btn" data-back aria-label="Voltar">←</button>
       <div class="topbar-title">24/09 · Quinta</div>
     </div>
 
