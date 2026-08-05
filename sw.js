@@ -1,7 +1,7 @@
 // Service Worker do Guia NYC — garante que o guia funcione 100% offline
 // depois da primeira vez que for aberto com internet.
 
-const CACHE_NAME = "guia-nyc-v3";
+const CACHE_NAME = "guia-nyc-v4";
 const CACHE_URLS = [
   "./",
   "./index.html",

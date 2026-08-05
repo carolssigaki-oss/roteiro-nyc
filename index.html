@@ -1478,6 +1478,14 @@ function navigate(hash){
   window.location.hash = hash;
 }
 
+// Voltar por hierarquia fixa (não pelo histórico do navegador) — assim
+// funciona igual mesmo quando o app abre direto numa tela funda (ex:
+// restaurando a última tela vista ao reabrir pelo ícone).
+function parentHash(hash){
+  if(/^#\/dia\//.test(hash)) return "#/cronograma";
+  return "#/";
+}
+
 function render(){
   const hash = window.location.hash || "#/";
   const app = document.getElementById("app");
@@ -1712,11 +1720,12 @@ function attachHandlers(){
   document.querySelectorAll("[data-back]").forEach(el=>{
     el.setAttribute("role","button");
     el.setAttribute("tabindex","0");
-    el.addEventListener("click", ()=> history.back());
+    const goBack = ()=> navigate(parentHash(window.location.hash));
+    el.addEventListener("click", goBack);
     el.addEventListener("keydown", (e)=>{
       if(e.key === "Enter" || e.key === " "){
         e.preventDefault();
-        history.back();
+        goBack();
       }
     });
   });
