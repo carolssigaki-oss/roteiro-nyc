@@ -532,7 +532,6 @@
   .store-row.required{ border-bottom-style:solid; }
   .store-row:last-child{ border-bottom:none; }
   .store-info{ min-width:0; display:flex; flex-direction:column; gap:1px; }
-  .store-name-row{ display:flex; align-items:center; gap:6px; min-width:0; }
   .store-name{
     font-size:13.5px;
     color:var(--ink);
@@ -540,20 +539,20 @@
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
-    min-width:0;
   }
   .store-row.required .store-name{ font-weight:700; }
   .ticket-badge{
     display:inline-flex;
     align-items:center;
-    flex-shrink:0;
+    align-self:flex-start;
     font-family:ui-monospace, monospace;
     font-size:10px;
     font-weight:700;
     color:#8A5A00;
     background:#FFF3DE;
-    padding:2px 7px;
+    padding:3px 8px;
     border-radius:20px;
+    margin:4px 0 3px;
   }
   .store-tag{
     font-family:ui-monospace, monospace;
@@ -1882,10 +1881,8 @@ function renderAtracoes(){
       return `
       <div class="store-row resto-trigger" data-attraction="${a.key}">
         <div class="store-info">
-          <span class="store-name-row">
-            <span class="store-name">${a.name}</span>
-            ${needsTicket ? `<span class="ticket-badge">🎟️ Ingresso</span>` : ""}
-          </span>
+          <span class="store-name">${a.name}</span>
+          ${needsTicket ? `<span class="ticket-badge">🎟️ Ingresso obrigatório</span>` : ""}
           <span class="store-tag optional">${a.desc || ""}</span>
         </div>
         ${a.mapsUrl ? `<a class="maps-icon-btn" href="${a.mapsUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>` : ""}
