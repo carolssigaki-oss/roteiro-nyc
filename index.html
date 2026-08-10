@@ -1604,6 +1604,7 @@ const STEPS_BY_DAY = {
     { key:"hotel-out", name:"Saída do hotel", description:"81 St–Museum of Natural History", chip:"station", node:"hollow" },
     { key:"amnh", name:"🏛️ AMNH — Museu de História Natural", description:"Um dos maiores museus de história natural do mundo.", node:"solid",
       map:{ lat:40.7813241, lng:-73.9739882, placeId:"ChIJCXoPsPRYwokRsV1MYnKBfaI" } },
+    { key:"almoco", name:"🍔 Almoço", description:"Milano Market Westside.", node:"solid" },
     { key:"belvedere", name:"🏰 Belvedere Castle", description:"Vista panorâmica sobre o Turtle Pond.", node:"solid", duration:"15–20 min",
       map:{ lat:40.7794302, lng:-73.9690677, placeId:"ChIJFXzf4e9YwokRtXgpty_i74g" } },
     { key:"strawberry", name:"🍓 Strawberry Fields", description:"Memorial Imagine em homenagem a John Lennon.", node:"solid", duration:"10–15 min",
@@ -2186,17 +2187,38 @@ function renderDay1(){
 
         <div class="tl-row" data-step="amnh">
           <div class="tl-time"></div>
-          <div class="tl-node"></div>
-          <div class="tl-content">
-            <div class="hook" data-scroll="gastronomia"><span class="hook-text">🍔 Almoço?</span> <span class="arrow">Ver opções ›</span></div>
-          </div>
-        </div>
-
-        <div class="tl-row" data-step="amnh">
-          <div class="tl-time"></div>
           <div class="tl-node"><div class="dot hollow"></div></div>
           <div class="tl-content">
             <div class="flow-transit">🚶 5 min a pé (~380m) entrando no parque pela <span class="address-chip">79th St (West)</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="almoco">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🍔 Almoço</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="almoco">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row resto-trigger" data-resto="milanowestside">
+                <div class="store-info">
+                  <span class="store-name">🥪 Milano Market Westside</span>
+                  <span class="store-tag optional">toque para detalhes</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=2892%20Broadway%2C%20New%20York%2C%20NY%2010025" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.instagram.com/milanomarketwestside/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -2342,18 +2364,25 @@ function renderDay1(){
         </div>
       </details>
 
-      <div class="section-title" id="gastronomia">🍽️ Gastronomia</div>
+      <div class="section-title" id="gastronomia">💡 Opcionais da região</div>
       <div class="simple-section">
-        <div class="placeholder-note">Café e opção sentada ainda a definir juntos para essa região.</div>
+        <div class="placeholder-note">Ideias extras do Upper West Side / Central Park — sem compromisso com o roteiro principal.</div>
         <div class="store-list" style="margin-top:10px;">
-          <div class="store-row resto-trigger" data-resto="milanowestside">
+          <div class="store-row">
             <div class="store-info">
-              <span class="store-name">🥪 Milano Market Westside</span>
-              <span class="store-tag optional">opção de almoço rápido · toque para detalhes</span>
+              <span class="store-name">⭐ The Met</span>
+              <span class="store-tag optional">passar pela escadaria/fachada</span>
+            </div>
+            <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=1000%20Fifth%20Avenue%2C%20New%20York%2C%20NY%2010028" target="_blank" rel="noopener">📍</a>
+          </div>
+          <div class="store-row resto-trigger" data-resto="glace">
+            <div class="store-info">
+              <span class="store-name">🍦 Glace NYC</span>
+              <span class="store-tag optional">opção de sobremesa · toque para detalhes</span>
             </div>
             <span class="gastro-row-actions">
-              <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=2892%20Broadway%2C%20New%20York%2C%20NY%2010025" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
-              <a class="ig-icon-btn" href="https://www.instagram.com/milanomarketwestside/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+              <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=1268%20Madison%20Ave%2C%20New%20York%2C%20NY%2010128" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+              <a class="ig-icon-btn" href="https://www.instagram.com/glacenewyork/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
             </span>
           </div>
         </div>
