@@ -1240,6 +1240,71 @@ const RESTO_DB = {
     dica: "Fila comum no horário de pico, mas anda rápido — pizza inteira costuma sair mais em conta que fatias avulsas.",
     mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.7332224,-74.0049081&query_place_id=ChIJ92OsaJVZwokRsC54kf-J-3g",
     igUrl: "https://www.instagram.com/lindustrielt/"
+  },
+  "motek": {
+    name: "🥙 Motek",
+    categoria: "Restaurante",
+    dia: 6,
+    regiao: "West Village",
+    tipo: "Mediterrâneo Moderno",
+    desc: "Rede nascida em Miami que virou fenômeno no Instagram — cozinha mediterrânea moderna com pratos para compartilhar, laffa recém-saída do forno, shawarma e um happy hour concorrido.",
+    pickLabel: "Vale pedir",
+    pick: "Hummus, Pita &amp; Laffa, Kebabs ou Shakshuka. Bom também só para um Happy Hour antes do jantar.",
+    dica: "Funciona bem como Happy Hour ou jantar mais leve — não precisa ser a refeição principal do dia.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=184%20Bleecker%20St%2C%20New%20York%2C%20NY%2010012",
+    igUrl: "https://www.instagram.com/motekcafe/"
+  },
+  "milanowestside": {
+    name: "🥪 Milano Market Westside",
+    categoria: "Restaurante",
+    dia: 1,
+    regiao: "Upper West Side",
+    tipo: "Deli Italiana",
+    desc: "Deli italiana tradicional do Upper West Side, conhecida principalmente pelos sanduíches grandes com ingredientes italianos, além de frios, queijos, pães e produtos importados.",
+    pickLabel: "Vale pedir",
+    pick: "Sanduíches italianos clássicos (frios, queijos e pães recém-fatiados no balcão).",
+    dica: "Boa opção de almoço rápido sem sair muito da rota do Upper West Side / Central Park.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=2892%20Broadway%2C%20New%20York%2C%20NY%2010025",
+    igUrl: "https://www.instagram.com/milanomarketwestside/"
+  },
+  "clintonstbaking": {
+    name: "🥞 Clinton St. Baking Company",
+    categoria: "Padaria",
+    dia: 3,
+    regiao: "Lower East Side",
+    tipo: "Brunch Americano",
+    desc: "Brunch americano clássico do Lower East Side, famoso pelos pancakes (eleitos os melhores de Nova York pela Time), mas também com ovos, fried chicken &amp; waffles e sanduíches de café da manhã.",
+    pickLabel: "Vale pedir",
+    pick: "Pancakes (com blueberry ou banana walnut), Fried Chicken &amp; Waffles ou Eggs Benedict.",
+    dica: "Fila costuma formar no brunch de fim de semana — bom como opção de café da manhã em vez de almoço.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=4%20Clinton%20St%2C%20New%20York%2C%20NY%2010002",
+    igUrl: "https://www.instagram.com/clintonstbakingco/"
+  },
+  "eileenscheesecake": {
+    name: "🍰 Eileen's Special Cheesecake",
+    categoria: "Sobremesa",
+    dia: 3,
+    regiao: "SoHo · Nolita",
+    tipo: "Cheesecake",
+    desc: "Instituição de Nolita desde 1974, especializada só em cheesecake — versões clássicas e recheadas, em tamanho individual ou fatia, num cardápio bem mais enxuto (e focado) do que uma padaria comum.",
+    pickLabel: "Vale pedir",
+    pick: "Original Plain Cheesecake, Oreo ou uma das versões de fruta (morango, framboesa).",
+    dica: "Boa parada de sobremesa saindo do SoHo, a poucos minutos a pé da Katz's.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=40.721568,-73.9972582&query_place_id=ChIJaeOQ3IhZwokRgxPZEE3noAM",
+    igUrl: "https://www.instagram.com/eileenscheesecake/"
+  },
+  "glace": {
+    name: "🍦 Glace NYC",
+    categoria: "Sobremesa",
+    dia: 1,
+    regiao: "Upper East Side",
+    tipo: "Sorveteria Moderna",
+    desc: "Sorveteria moderna do Upper East Side, do mesmo grupo da Zabar's, com sorvetes cremosos e sundaes bem fotogênicos — inclusive uma versão em sorvete do famoso chocolate quente gelado da casa.",
+    pickLabel: "Vale pedir",
+    pick: "Sundae da casa ou o Frozen Hot Chocolate.",
+    dica: "Não fica no trajeto direto do roteiro — só vale como opção se estiver na região do Upper East Side / Central Park com tempo de sobra.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=1268%20Madison%20Ave%2C%20New%20York%2C%20NY%2010128",
+    igUrl: "https://www.instagram.com/glacenewyork/"
   }
 };
 
@@ -1300,6 +1365,7 @@ const CATEGORY_BY_KEY = {
   grandcentral: "Marcos Históricos", memorial911: "Marcos Históricos",
   brooklynbridge: "Marcos Históricos", timessquare: "Marcos Históricos",
   liberty: "Marcos Históricos", wallstreet: "Marcos Históricos",
+  memorial911museum: "Museus & Cultura",
   // Bairros para Explorar
   fifthave: "Bairros para Explorar", soho: "Bairros para Explorar",
   chinatown: "Bairros para Explorar", dumbo: "Bairros para Explorar",
@@ -1313,7 +1379,8 @@ const ATTRACTIONS_DB = {
   stpatricks: { desc:"Principal catedral católica de Nova York e um dos edifícios neogóticos mais icônicos da cidade.", dica:"A entrada é gratuita e o interior impressiona pelo contraste com os arranha-céus da 5ª Avenida.", admissao:"🆓 Entrada gratuita" },
   rockefeller: { desc:"Complexo art déco conhecido pela estátua de Prometeu, pelos estúdios da NBC e pela pista de patinação no inverno.", dica:"Vale entrar rapidamente no lobby do 30 Rockefeller Plaza e visitar as lojas da praça.", admissao:"🆓 Entrada gratuita" },
   grandcentral: { desc:"Estação histórica famosa pelo teto constelar do Main Concourse e pela arquitetura Beaux-Arts.", dica:"Não deixe de conhecer a Whispering Gallery ao lado do Oyster Bar.", admissao:"🆓 Entrada gratuita" },
-  memorial911: { desc:"Memorial construído no local das antigas Torres Gêmeas, com duas piscinas monumentais e os nomes das vítimas gravados em bronze.", dica:"Reserve um momento para conhecer a Survivor Tree, símbolo de resiliência após os atentados.", admissao:"🆓 Memorial gratuito | 🎟️ Museu com ingresso opcional" },
+  memorial911: { desc:"Memorial construído no local das antigas Torres Gêmeas, com duas piscinas monumentais e os nomes das vítimas gravados em bronze — área externa, aberta e gratuita.", dica:"Reserve um momento para conhecer a Survivor Tree, símbolo de resiliência após os atentados.", admissao:"🆓 Entrada gratuita" },
+  memorial911museum: { desc:"Museu com o acervo sobre os atentados de 11 de setembro de 2001 — artefatos, relatos e uma exposição memorial completa, num percurso interno que costuma emocionar bastante.", dica:"Reserve de 1h30 a 2h para a visita com calma. Vale comprar o ingresso com horário marcado (timed entry) com antecedência.", admissao:"🎟️ Ingresso obrigatório" },
   brooklynbridge: { desc:"Ponte inaugurada em 1883, ligando Manhattan ao Brooklyn com uma das caminhadas mais famosas da cidade.", dica:"Caminhe pelo tablado elevado para aproveitar as melhores vistas do skyline.", admissao:"🆓 Entrada gratuita" },
   timessquare: { desc:"O cruzamento mais famoso de Nova York, conhecido pelos enormes painéis de LED e pela atmosfera vibrante.", dica:"A escadaria vermelha da TKTS oferece uma das melhores vistas da praça.", admissao:"🆓 Entrada gratuita" },
   liberty: { desc:"Passeio de barco até dois dos maiores símbolos da história americana: a Estátua da Liberdade e o Museu da Imigração.", dica:"Reserve cerca de 3 a 4 horas para visitar as duas ilhas com tranquilidade.", admissao:"🎟️ Ingresso obrigatório (Statue City Cruises)" },
@@ -1346,7 +1413,7 @@ const ATTRACTIONS_DB = {
 };
 
 function getAttractionsList(){
-  const skipKeys = new Set(["hotel-out", "hotel-back", "cafe", "almoco", "jantar", "hotelbreak"]);
+  const skipKeys = new Set(["hotel-out", "hotel-back", "cafe", "almoco", "jantar", "hotelbreak", "zara34", "timeoutmarket"]);
   const list = [];
   const seen = new Set();
   Object.keys(STEPS_BY_DAY).forEach(dayId => {
@@ -1554,6 +1621,8 @@ const STEPS_BY_DAY = {
     { key:"hotel-out", name:"Saída do hotel", description:"Empire State Building", chip:"address", node:"hollow" },
     { key:"empire", name:"🏙️ Empire State Building", description:"Um dos observatórios mais famosos do mundo.", node:"solid",
       map:{ lat:40.7484405, lng:-73.9856644, placeId:"ChIJaXQRs6lZwokRY6EFpJnhNNE" } },
+    { key:"zara34", name:"🛍️ Zara 34th", description:"Loja na 34th St, a caminho da 5ª Avenida.", node:"solid", duration:"20–30 min",
+      map:{ lat:40.7488, lng:-73.9878, placeId:"ChIJ4QozbalZwokR88tFRSL5lC8" } },
     { key:"cafe", name:"☕ Café", description:"Blue Bottle Coffee.", node:"solid" },
     { key:"fifthave", name:"🛍️ 5ª Avenida", description:"Apple, Uniqlo e Saks no caminho.", node:"solid",
       map:{ lat:40.7638478, lng:-73.9729785, placeId:"ChIJp-0cdPBYwokRRNGjt9080k8" } },
@@ -1568,8 +1637,10 @@ const STEPS_BY_DAY = {
       map:{ lat:40.7535367, lng:-73.9829529, placeId:"ChIJvbGg56pZwokRp_E3JbivnLQ" } },
     { key:"nypl", name:"📚 New York Public Library", description:"Uma das bibliotecas mais bonitas dos EUA.", node:"solid", duration:"20–30 min",
       map:{ lat:40.7531823, lng:-73.9822534, placeId:"ChIJqaiomQBZwokRTHOaUG7fUTs" } },
-    { key:"memorial911", name:"🕊️ 9/11 Memorial", description:"Homenagem solene no local exato das antigas Torres Gêmeas.", node:"solid", duration:"30–40 min",
+    { key:"memorial911", name:"🕊️ 9/11 Memorial", description:"Homenagem solene no local exato das antigas Torres Gêmeas — área externa.", node:"solid", duration:"30–40 min",
       map:{ lat:40.7111026, lng:-74.0130975, placeId:"ChIJuywwGBpawokRCb31xeHV66I" } },
+    { key:"memorial911museum", name:"🎟️ 9/11 Memorial Museum", description:"Visita interna ao museu — ingresso obrigatório.", node:"solid", duration:"1h30–2h",
+      map:{ lat:40.7115, lng:-74.0134, placeId:"ChIJuywwGBpawokRCb31xeHV66I" } },
     { key:"oculus", name:"🕊️ The Oculus", description:"Estação futurista projetada por Santiago Calatrava.", node:"solid", duration:"15–20 min",
       map:{ lat:40.7118042, lng:-74.0118498, placeId:"ChIJ4f4VwT5bwokRwQ6hjfC-eTM" } },
     { key:"jantar", name:"🍽️ Jantar", description:"Hamburger America.", node:"solid" },
@@ -1588,6 +1659,8 @@ const STEPS_BY_DAY = {
       map:{ lat:40.7068623, lng:-73.9978405, placeId:"ChIJ41U-c_ZbwokRnOGug5xZbys" } },
     { key:"dumbo", name:"📸 DUMBO & Brooklyn Bridge Park", description:"Ângulo clássico da foto e pôr do sol à beira-rio.", node:"solid", duration:"20–30 min",
       map:{ lat:40.7033165, lng:-73.9895698, placeId:"ChIJd9SPZTFawokRh9NpOTE-G5k" } },
+    { key:"timeoutmarket", name:"🌉 Time Out Market New York", description:"Food hall dentro do Empire Stores, em DUMBO.", node:"solid", duration:"30–60 min",
+      map:{ lat:40.7036259, lng:-73.9916942 } },
     { key:"hotel-back", name:"Volta para o hotel", description:"333 W 38th St", chip:"address", node:"hollow",
       map:{ lat:40.755553, lng:-73.993031, placeId:"ChIJM3IUOK1ZwokRmgyn41pFrtE" } }
   ]
@@ -2271,7 +2344,19 @@ function renderDay1(){
 
       <div class="section-title" id="gastronomia">🍽️ Gastronomia</div>
       <div class="simple-section">
-        <div class="placeholder-note">A definir juntos — café, almoço rápido e opção sentada para essa região.</div>
+        <div class="placeholder-note">Café e opção sentada ainda a definir juntos para essa região.</div>
+        <div class="store-list" style="margin-top:10px;">
+          <div class="store-row resto-trigger" data-resto="milanowestside">
+            <div class="store-info">
+              <span class="store-name">🥪 Milano Market Westside</span>
+              <span class="store-tag optional">opção de almoço rápido · toque para detalhes</span>
+            </div>
+            <span class="gastro-row-actions">
+              <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=2892%20Broadway%2C%20New%20York%2C%20NY%2010025" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+              <a class="ig-icon-btn" href="https://www.instagram.com/milanomarketwestside/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+            </span>
+          </div>
+        </div>
       </div>
       <div class="section-title">💡 Observações úteis</div>
       <div class="simple-section">
@@ -2317,7 +2402,7 @@ function renderDay2(){
     <div class="container">
 
       <details class="overview-block flow-details" data-day="2" open>
-        <summary><span class="summary-title-group">📍 Fluxo do dia <span class="stop-count">10 paradas</span></span></summary>
+        <summary><span class="summary-title-group">📍 Fluxo do dia <span class="stop-count">12 paradas</span></span></summary>
         <div class="route">
         <div class="route-line"></div>
 
@@ -2353,7 +2438,18 @@ function renderDay2(){
           </div>
         </div>
 
-        <div class="tl-row" data-step="empire">
+        <div class="tl-row" data-step="zara34">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🛍️ Zara 34th</div>
+              <div class="flow-desc">Loja grande de moda bem na Herald Square, a caminho da estação — boa pra uma parada rápida de compras logo depois do Empire State.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="zara34">
           <div class="tl-time"></div>
           <div class="tl-node"><div class="dot hollow"></div></div>
           <div class="tl-content">
@@ -2361,7 +2457,7 @@ function renderDay2(){
           </div>
         </div>
 
-        <div class="tl-row" data-step="empire">
+        <div class="tl-row" data-step="zara34">
           <div class="tl-time"></div>
           <div class="tl-node"><div class="dot hollow"></div></div>
           <div class="tl-content">
@@ -2673,7 +2769,19 @@ function renderDay2(){
           </div>
         </div>
 
-        <div class="tl-row" data-step="memorial911">
+        <div class="tl-row" data-step="memorial911museum">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🎟️ 9/11 Memorial Museum</div>
+              <div class="flow-desc">Visita interna ao museu, com o acervo sobre os atentados de 11 de setembro — ingresso obrigatório, separado do Memorial (área externa).</div>
+              <div class="flow-tip"><span>⚠️</span><span class="tip-text">Reserve de 1h30 a 2h para o museu com calma. Isso pode empurrar a visita ao Oculus e o jantar mais pra frente — vale comprar o ingresso com horário marcado (timed entry) antes da viagem.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="memorial911museum">
           <div class="tl-time"></div>
           <div class="tl-node"><div class="dot hollow"></div></div>
           <div class="tl-content">
@@ -2816,7 +2924,7 @@ function renderDay3(){
     <div class="container">
 
       <details class="overview-block flow-details" data-day="3" open>
-        <summary><span class="summary-title-group">📍 Fluxo do dia <span class="stop-count">9 paradas</span></span></summary>
+        <summary><span class="summary-title-group">📍 Fluxo do dia <span class="stop-count">10 paradas</span></span></summary>
         <div class="route">
         <div class="route-line"></div>
 
@@ -2863,6 +2971,16 @@ function renderDay3(){
                 <span class="gastro-row-actions">
                   <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7208784,-73.9968333&query_place_id=ChIJKQWE8UZZwokRUFB32gGhH-Q" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
                   <a class="ig-icon-btn" href="https://www.instagram.com/leonsbagelsnyc/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+              <div class="store-row resto-trigger" data-resto="clintonstbaking">
+                <div class="store-info">
+                  <span class="store-name">🥞 Clinton St. Baking Company</span>
+                  <span class="store-tag optional">opção · brunch, não fica no caminho direto</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=4%20Clinton%20St%2C%20New%20York%2C%20NY%2010002" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.instagram.com/clintonstbakingco/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
                 </span>
               </div>
             </div>
@@ -2929,12 +3047,29 @@ function renderDay3(){
                 </div>
                 <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7207083,-74.0009746&query_place_id=ChIJ_6fuJYpZwokRiZR69KApcHc" target="_blank" rel="noopener">📍</a>
               </div>
-              <div class="store-row">
+              <div class="store-row resto-trigger" data-resto="eileenscheesecake">
                 <div class="store-info">
                   <span class="store-name">🍰 Eileen's Special Cheesecake</span>
-                  <span class="store-tag optional">opcional</span>
+                  <span class="store-tag optional">opção de sobremesa · toque para detalhes</span>
                 </div>
-                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.721568,-73.9972582&query_place_id=ChIJaeOQ3IhZwokRgxPZEE3noAM" target="_blank" rel="noopener">📍</a>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.721568,-73.9972582&query_place_id=ChIJaeOQ3IhZwokRgxPZEE3noAM" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.instagram.com/eileenscheesecake/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">🛍️ The Vintage Twin</span>
+                  <span class="store-tag optional">opção de compras · vintage</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=597%20Broadway%2C%20New%20York%2C%20NY%2010012" target="_blank" rel="noopener">📍</a>
+              </div>
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">📸 Old Friend Photobooth</span>
+                  <span class="store-tag optional">extra · cabine analógica de fotos</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=145%20Allen%20St%2C%20New%20York%2C%20NY%2010002" target="_blank" rel="noopener">📍</a>
               </div>
             </div>
           </div>
@@ -3103,6 +3238,25 @@ function renderDay3(){
           <div class="tl-time"></div>
           <div class="tl-node"><div class="dot hollow"></div></div>
           <div class="tl-content">
+            <div class="flow-transit">🚶 ~5 min a pé até o <span class="address-chip">Empire Stores</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="timeoutmarket">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🌉 Time Out Market New York</div>
+              <div class="flow-desc">Food hall dentro do Empire Stores, em DUMBO, com diversas opções gastronômicas e bares. Boa parada pra explorar, comer alguma coisa ou tomar um drink sem precisar decidir previamente o jantar — não substitui necessariamente o jantar planejado.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="timeoutmarket">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
             <div class="flow-transit">🚶 ~6 min a pé (~450m) até <span class="station-chip">High St</span></div>
           </div>
         </div>
@@ -3128,7 +3282,7 @@ function renderDay3(){
       <div class="section-title" id="gastronomia">🍽️ Gastronomia</div>
       <div class="simple-section">
         <div class="gastro-block"><b>🍽️ Jantar</b><br>
-          A definir — retorno direto ao hotel após o DUMBO
+          A definir — o Time Out Market já cobre a parte de comer/beber no DUMBO, se fizer mais sentido do que voltar pro hotel e decidir depois. Nada obrigatório, é só uma opção a mais.
         </div>
       </div>
       <div class="section-title">💡 Observações úteis</div>
@@ -3819,6 +3973,17 @@ function renderDay6(){
 
         <div class="tl-row" data-step="vessel">
           <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="flow-optional">
+              <b>💡 Extra — se sobrar tempo</b>
+              🏙️ Edge fica bem ali em Hudson Yards, ao lado da entrada da High Line — conveniente nesse dia por já estar na região. Não é parada obrigatória, só vale se der tempo e vontade antes de seguir para a High Line.
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="vessel">
+          <div class="tl-time"></div>
           <div class="tl-node"><div class="dot hollow"></div></div>
           <div class="tl-content">
             <div class="flow-transit">🚶 ~2 min até a <span class="address-chip">High Line</span></div>
@@ -3880,6 +4045,13 @@ function renderDay6(){
                   <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.742693,-74.0062283&query_place_id=ChIJw2lMFL9ZwokRyO_5o2VT8os" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
                   <a class="ig-icon-btn" href="https://www.instagram.com/friedmansnyc/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
                 </span>
+              </div>
+              <div class="store-row">
+                <div class="store-info">
+                  <span class="store-name">👜 FASHIONPHILE Flagship</span>
+                  <span class="store-tag optional">extra de compras · ~10 min do Chelsea Market</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=601%20W%2026th%20St%2C%20New%20York%2C%20NY%2010001" target="_blank" rel="noopener">📍</a>
               </div>
             </div>
           </div>
@@ -4008,6 +4180,16 @@ function renderDay6(){
                 <span class="gastro-row-actions">
                   <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7332224,-74.0049081&query_place_id=ChIJ92OsaJVZwokRsC54kf-J-3g" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
                   <a class="ig-icon-btn" href="https://www.instagram.com/lindustrielt/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+              <div class="store-row resto-trigger" data-resto="motek">
+                <div class="store-info">
+                  <span class="store-name">🥙 Motek</span>
+                  <span class="store-tag optional">opção · Happy Hour ou jantar</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=184%20Bleecker%20St%2C%20New%20York%2C%20NY%2010012" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.instagram.com/motekcafe/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
                 </span>
               </div>
             </div>
