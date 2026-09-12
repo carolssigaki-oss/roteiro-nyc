@@ -1947,7 +1947,7 @@ const ATTRACTIONS_DB = {
 };
 
 function getAttractionsList(){
-  const skipKeys = new Set(["hotel-out", "hotel-back", "cafe", "almoco", "jantar", "hotelbreak", "zara34", "mtckitchen", "timeoutmarket", "artichoke", "fashionphile"]);
+  const skipKeys = new Set(["hotel-out", "hotel-back", "cafe", "almoco", "jantar", "hotelbreak", "zara34", "mtckitchen", "timeoutmarket", "artichoke", "fashionphile", "appleuws"]);
   const list = [];
   const seen = new Set();
   Object.keys(STEPS_BY_DAY).forEach(dayId => {
@@ -2164,6 +2164,8 @@ const STEPS_BY_DAY = {
       map:{ lat:40.7739528, lng:-73.9709657, placeId:"ChIJEYYWppJYwokRUTul6ztwlJ0" } },
     { key:"mall", name:"🌳 The Mall", description:"Alameda clássica cercada por olmos americanos.", node:"solid", duration:"10–15 min",
       map:{ lat:40.7723522, lng:-73.9715901, placeId:"ChIJxcSlpvJYwokRLcMSp1tjBf4" } },
+    { key:"appleuws", name:"🍎 Apple Upper West Side", description:"Retirada de compra feita online.", node:"solid", duration:"15–20 min",
+      map:{ lat:40.7750740, lng:-73.9826508 } },
     { key:"jantar", name:"🍽️ Jantar — Manhatto", description:"Japonesa com toque italiano, em Hell's Kitchen.", node:"solid",
       map:{ lat:40.7650296, lng:-73.9882192, placeId:"ChIJif9vbABZwokROQbuqj1WHNQ" } },
     { key:"hotel-back", name:"Volta para o hotel", description:"333 W 38th St", chip:"address", node:"hollow",
@@ -3184,7 +3186,32 @@ function renderDay1(){
           <div class="tl-time"></div>
           <div class="tl-node"><div class="dot hollow"></div></div>
           <div class="tl-content">
-            <div class="flow-transit">🚶 ~10 min a pé (~750m) até <span class="address-chip">Columbus Circle (59 St)</span></div>
+            <div class="flow-transit">🚶 ~12-15 min a pé (~1km) atravessando o parque até a <span class="address-chip">Broadway com a 67th St</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="appleuws">
+          <div class="tl-time">16h00</div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-time-label">📅 Retirada confirmada · 16h00–16h15</div>
+              <div class="flow-title">🍎 Apple Upper West Side</div>
+              <div class="flow-desc">Retirada de uma compra feita online.</div>
+              <div class="flow-tip"><span>💡</span><span class="tip-text">Chegar dentro da janela de check-in (16h00–16h15) — levar documento e o e-mail de confirmação da compra.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="appleuws">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">
+              🚶 ~3 min a pé até <span class="station-chip">66 St–Lincoln Center</span><br>
+              🚇 Linha <b>1</b> (sentido Downtown) → <span class="station-chip">50 St</span> (~10-12 min)<br>
+              🚶 ~5-6 min a pé até o <span class="address-chip">Manhatto</span>
+            </div>
           </div>
         </div>
 
@@ -3196,7 +3223,7 @@ function renderDay1(){
               <div class="flow-time-label">📅 Escolhido · falta reservar</div>
               <div class="flow-title">🍽️ Jantar — Manhatto</div>
               <div class="flow-desc">Japonesa com toque italiano na 9th Ave — pasta de uni, croissant de unagi, corn ribs. 4,9 no Google.</div>
-              <div class="flow-tip"><span>🕒</span><span class="tip-text">Sábado a cozinha fecha entre 15h e 17h e reabre até 23h. 19h dá tempo de voltar do parque, tomar banho e descansar.</span></div>
+              <div class="flow-tip"><span>🕒</span><span class="tip-text">Sábado a cozinha fecha entre 15h e 17h e reabre até 23h. 19h dá tempo de voltar da Apple, tomar banho e descansar.</span></div>
               <div class="flow-tip"><span>💡</span><span class="tip-text">É a única noite da viagem sem compromisso depois nem despertador cedo no dia seguinte — dá para jantar sem relógio.</span></div>
             </div>
           </div>
