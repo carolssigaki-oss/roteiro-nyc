@@ -2059,9 +2059,9 @@ const DAYS = [
   {
     id: 2, colorClass: "c2", date: "20/09 · Domingo",
     grupo: "parcial", grupoNota: "Juntos até a Grand Central — depois eles seguem para o Jersey Gardens",
-    name: "Midtown Clássica + Memorial 9/11",
-    km: "~8-9 km", ritmo: "moderado", ritmoLabel: "🟡 Moderado",
-    reserva: "Empire State (10h00) ✓ · 9/11 Museum (16h30) ✓", chuva: "—",
+    name: "Roosevelt Island + Midtown Clássica + Memorial 9/11",
+    km: "~9-10 km", ritmo: "moderado", ritmoLabel: "🟡 Moderado",
+    reserva: "9/11 Museum (16h30) ✓", chuva: "—",
     ready: true
   },
   {
@@ -2075,9 +2075,9 @@ const DAYS = [
   {
     id: 4, colorClass: "c4", date: "22/09 · Terça",
     grupo: "parcial", grupoNota: "Juntos até a saída do SUMMIT — à noite só um deles vai ao teatro",
-    name: "Roosevelt Island + SUMMIT + Broadway",
-    km: "~8-9 km", ritmo: "moderado", ritmoLabel: "🟡 Moderado",
-    reserva: "SUMMIT (14h00) ✓ · Broadway (19h00) ✓", chuva: "Alta",
+    name: "Empire State + SUMMIT + Broadway",
+    km: "~7-8 km", ritmo: "moderado", ritmoLabel: "🟡 Moderado",
+    reserva: "Empire State (10h00) ✓ · SUMMIT (14h00) ✓ · Broadway (19h00) ✓", chuva: "Alta",
     ready: true
   },
   {
@@ -2172,9 +2172,11 @@ const STEPS_BY_DAY = {
       map:{ lat:40.755553, lng:-73.993031, placeId:"ChIJM3IUOK1ZwokRmgyn41pFrtE" } }
   ],
   "2": [
-    { key:"hotel-out", grupo:"casal", name:"Saída do hotel", description:"Empire State Building", chip:"address", node:"hollow" },
-    { key:"empire", name:"🏙️ Empire State Building", description:"Um dos observatórios mais famosos do mundo.", node:"solid",
-      map:{ lat:40.7484405, lng:-73.9856644, placeId:"ChIJaXQRs6lZwokRY6EFpJnhNNE" } },
+    { key:"hotel-out", grupo:"casal", name:"Saída do hotel", description:"Roosevelt Island Tramway, via Lexington Av/53 St", chip:"station", node:"hollow" },
+    { key:"tram", name:"🚡 Roosevelt Island Tramway (Ida)", description:"Bonde aéreo histórico cruzando o East River.", node:"solid",
+      map:{ lat:40.7612789, lng:-73.9641664, placeId:"ChIJfQDvGoxZwokRvzLRRApytgQ" } },
+    { key:"rooseveltisland", name:"🏝️ Roosevelt Island", description:"Mirante, calçadão e o FDR Four Freedoms Park (aberto hoje).", node:"solid", duration:"~50 min",
+      map:{ lat:40.7566, lng:-73.9558, placeId:"ChIJVwZ6u59ZwokRsSeIMKoUeZg" } },
     { key:"zara34", name:"🛍️ Zara 34th", description:"Loja na 34th St, a caminho da 5ª Avenida.", node:"solid", duration:"20–30 min",
       map:{ lat:40.7488, lng:-73.9878, placeId:"ChIJ4QozbalZwokR88tFRSL5lC8" } },
     { key:"cafe", name:"☕ Café — Blue Bottle", description:"Blue Bottle Coffee.", node:"solid",
@@ -2231,10 +2233,8 @@ STEPS_BY_DAY["4"] = [
   { key:"hotel-out", grupo:"casal", name:"Saída do hotel", description:"Remi Flower & Coffee, via Lexington Av/53 St", chip:"station", node:"hollow" },
   { key:"cafe", name:"☕ Café — Remi Flower", description:"Remi Flower & Coffee.", node:"solid",
     map:{ lat:40.7537, lng:-73.9691 } },
-  { key:"tram", name:"🚡 Roosevelt Island Tramway (Ida)", description:"Bonde aéreo histórico cruzando o East River.", node:"solid",
-    map:{ lat:40.7612789, lng:-73.9641664, placeId:"ChIJfQDvGoxZwokRvzLRRApytgQ" } },
-  { key:"rooseveltisland", name:"🏝️ Roosevelt Island", description:"Mirante, café e caminhada na orla — 5 paradas dentro da ilha.", node:"solid", duration:"~1h10",
-    map:{ lat:40.7566, lng:-73.9558, placeId:"ChIJVwZ6u59ZwokRsSeIMKoUeZg" } },
+  { key:"empire", name:"🏙️ Empire State Building", description:"Um dos observatórios mais famosos do mundo.", node:"solid",
+    map:{ lat:40.7484405, lng:-73.9856644, placeId:"ChIJaXQRs6lZwokRY6EFpJnhNNE" } },
   { key:"almoco", name:"🍔 Almoço — UrbanSpace", description:"UrbanSpace Vanderbilt.", node:"solid",
     map:{ lat:40.7543604, lng:-73.9761919, placeId:"ChIJXSh7-f1YwokR5MTjegK5cGQ" } },
   { key:"summit", name:"🏙️ SUMMIT One Vanderbilt", description:"Observatório imersivo e espelhado no topo do arranha-céu.", node:"solid",
@@ -2672,15 +2672,15 @@ const TICKETS = [
     origem:"pacote", status:"confirmado",
     obs:"O museu em si não tem hora marcada — entrada livre a partir das 10h. Só o Space Show é agendado. Estar no planetário 10 min antes; dura 24 min." },
 
-  { dia:2, data:"20/09 · Dom", nome:"Empire State Building",
-    hora:"10h00", horaPrevista:"", local:"20 W 34th St",
-    origem:"pacote", status:"confirmado",
-    obs:"Saída do hotel 09h30 — são ~10 min a pé. Esta é a primeira parada do dia." },
-
   { dia:2, data:"20/09 · Dom", nome:"9/11 Memorial Museum",
     hora:"16h30", horaPrevista:"", local:"180 Greenwich St",
     origem:"pacote", status:"confirmado",
     obs:"Revista de segurança na entrada, tipo aeroporto. Reserve 1h30 a 2h — o museu fecha às 19h." },
+
+  { dia:4, data:"22/09 · Ter", nome:"Empire State Building",
+    hora:"10h00", horaPrevista:"", local:"20 W 34th St",
+    origem:"pacote", status:"confirmado",
+    obs:"Depois do café na Remi Flower — chegar com 10-15 min de sobra." },
 
   { dia:4, data:"22/09 · Ter", nome:"SUMMIT One Vanderbilt",
     hora:"14h00", horaPrevista:"", local:"45 E 42nd St",
@@ -2776,9 +2776,9 @@ function attachTicketHandlers(){
 const DIA_INFO = {
   0: { data:"18/09", dow:"Sex", tema:"Chegada + Times Square" },
   1: { data:"19/09", dow:"Sáb", tema:"AMNH + Central Park" },
-  2: { data:"20/09", dow:"Dom", tema:"Empire State + 9/11" },
+  2: { data:"20/09", dow:"Dom", tema:"Roosevelt Island + 9/11" },
   3: { data:"21/09", dow:"Seg", tema:"SoHo + Brooklyn" },
-  4: { data:"22/09", dow:"Ter", tema:"Roosevelt + Broadway" },
+  4: { data:"22/09", dow:"Ter", tema:"Empire State + Broadway" },
   5: { data:"23/09", dow:"Qua", tema:"Liberdade + FiDi" },
   6: { data:"24/09", dow:"Qui", tema:"High Line + Village" }
 };
@@ -3323,13 +3323,13 @@ function renderDay2(){
 
     <div class="day-header">
       <div class="day-header-eyebrow">Dia 2 de 6 <span class="eyebrow-sep">·</span> <span class="grupo-pill g-parcial" title="Sogros em parte do dia">👴🏻👵🏻</span></div>
-      <h1>Midtown Clássica + Memorial 9/11</h1>
+      <h1>Roosevelt Island + Midtown Clássica + Memorial 9/11</h1>
     </div>
 
     <div class="summary-bar">
       <div class="summary-item">
         <div class="summary-label">Caminhada e ritmo</div>
-        <div class="summary-value">🚶 ~8-9 km · 🟡 Moderado</div>
+        <div class="summary-value">🚶 ~9-10 km · 🟡 Moderado</div>
       </div>
       <div class="summary-item">
         <div class="summary-label">Chuva - flexibilidade</div>
@@ -3346,34 +3346,112 @@ function renderDay2(){
         <div class="route-line"></div>
 
         <div class="tl-row" data-step="hotel-out">
-          <div class="tl-time">09h30</div>
+          <div class="tl-time">09h00</div>
           <div class="tl-node"><div class="dot hollow"></div></div>
           <div class="tl-content">
             <div class="flow-transit">
               <b>Saída do Hotel</b><br>
-              🚶 ~10-12 min a pé (~850m) pela 34th St até a <span class="address-chip">5ª Avenida</span>.
+              🚶 ~10 min a pé até <span class="station-chip">Times Sq–42 St</span><br>
+              🚇 Linha <b>E</b> (sentido Queens) → <span class="station-chip">Lexington Av/53 St</span> (~6 min)<br>
+              🚶 ~12 min a pé (~900m) subindo a 2nd Ave em linha reta
             </div>
           </div>
         </div>
 
-        <div class="tl-row" data-step="empire">
-          <div class="tl-time">10h00</div>
+        <div class="tl-row" data-step="tram">
+          <div class="tl-time"></div>
           <div class="tl-node"><div class="dot"></div></div>
           <div class="tl-content">
             <div class="flow-stop">
-              <div class="flow-time-label">🎟️ Entrada confirmada · 10h00</div>
-              <div class="flow-title">🏙️ Empire State Building</div>
-              <div class="flow-desc">Um dos observatórios mais famosos do mundo, com vista panorâmica de Manhattan.</div>
-              <div class="flow-tip"><span>💡</span> O primeiro horário da manhã costuma ter menos filas.</div>
+              <div class="flow-title">🚡 Roosevelt Island Tramway (Ida)</div>
+              <div class="flow-desc">Bonde aéreo histórico que cruza o East River oferecendo vista panorâmica dos arranha-céus de Midtown.</div>
+              <div class="flow-tip"><span>💡</span> Pague a catraca diretamente com o mesmo cartão/OMNY do metrô (mesmo valor da passagem).</div>
             </div>
           </div>
         </div>
 
-        <div class="tl-row" data-step="empire">
+        <div class="tl-row" data-step="tram">
           <div class="tl-time"></div>
           <div class="tl-node"><div class="dot hollow"></div></div>
           <div class="tl-content">
-            <div class="flow-transit">🚶 ~3 min até <span class="station-chip">34 St–Herald Sq</span></div>
+            <div class="flow-transit">🚡 ~4 min de travessia</div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="rooseveltisland">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🏝️ Roosevelt Island</div>
+              <div class="flow-desc">Ilha estreita e silenciosa no East River, a minutos do caos de Midtown. Versão enxuta hoje, pra não apertar o Museu do 11/9 às 16h30.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="rooseveltisland">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="substep-list">
+              <div class="substep">
+                <div class="substep-info">
+                  <span class="substep-time">~10 min</span>
+                  <span class="substep-name">📸 Mirante da Orla Oeste</span>
+                  <span class="substep-desc">Primeira vista aberta de Midtown, a poucos passos do bonde. Bom para se orientar: Manhattan fica à direita, e todo o percurso segue para o sul.</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7575677,-73.9552396&query_place_id=ChIJeR-0PllZwokRXSIa1ViHhS0" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+              </div>
+
+              <div class="substep-walk">🚶 ~9 min a pé (~650m) rumo sul pelo calçadão, passando pela Cornell Tech</div>
+
+              <div class="substep">
+                <div class="substep-info">
+                  <span class="substep-time">~15 min</span>
+                  <span class="substep-name">🌇 Calçadão Oeste</span>
+                  <span class="substep-desc">De onde sai a foto clássica: a sede da ONU e o Chrysler Building enquadrados do outro lado do East River.</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7530,-73.9585" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+              </div>
+
+              <div class="substep-walk">🚶 ~8 min a pé (~600m) seguindo para a ponta sul, passando pelo Renwick Ruin</div>
+
+              <div class="substep">
+                <div class="substep-info">
+                  <span class="substep-time">~15-20 min</span>
+                  <span class="substep-name">🏛️ FDR Four Freedoms Park</span>
+                  <span class="substep-desc">Memorial de granito de Louis Kahn na ponta sul da ilha — hoje é domingo, então está aberto (9h-19h). Na terça, quando esse passeio era originalmente planejado, ele fica fechado.</span>
+                </div>
+                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.74972,-73.96139" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="rooseveltisland">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="flow-tip"><span>💡</span><span class="tip-text">Se sobrar tempo: <b>The Cafe at Cornell Tech</b> (aberto domingo 9h-17h) e o <b>Renwick Ruin</b> (ruína cercada do hospital de varíola de 1856) ficam bem no caminho entre o Mirante e o Calçadão — só não são parada fixa hoje pra não apertar o horário do Museu do 11/9.</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="rooseveltisland">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="flow-tip"><span>🗼</span><span class="tip-text">O farol da ponta norte aparece em muitas listas, mas fica a ~2,5 km na direção oposta. Não cabe nesse dia.</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="rooseveltisland">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">
+              🚶 ~12 min a pé (ou Red Bus, gratuito) até a <span class="station-chip">Roosevelt Island</span> (metrô)<br>
+              🚇 Linha <b>F</b> (sentido Manhattan) → <span class="station-chip">34 St–Herald Sq</span> (~12-15 min)
+            </div>
           </div>
         </div>
 
@@ -4285,13 +4363,13 @@ function renderDay4(){
 
     <div class="day-header">
       <div class="day-header-eyebrow">Dia 4 de 6 <span class="eyebrow-sep">·</span> <span class="grupo-pill g-parcial" title="Sogros em parte do dia">👴🏻👵🏻</span></div>
-      <h1>Roosevelt Island + SUMMIT + Broadway</h1>
+      <h1>Empire State + SUMMIT + Broadway</h1>
     </div>
 
     <div class="summary-bar">
       <div class="summary-item">
         <div class="summary-label">Caminhada e ritmo</div>
-        <div class="summary-value">🚶 ~8-9 km · 🟡 Moderado</div>
+        <div class="summary-value">🚶 ~7-8 km · 🟡 Moderado</div>
       </div>
       <div class="summary-item">
         <div class="summary-label">Chuva - flexibilidade</div>
@@ -4360,131 +4438,32 @@ function renderDay4(){
           <div class="tl-time"></div>
           <div class="tl-node"><div class="dot hollow"></div></div>
           <div class="tl-content">
-            <div class="flow-transit">🚶 ~12 min a pé (~900m) subindo a 2nd Ave em linha reta</div>
+            <div class="flow-transit">
+              🚶 ~5 min a pé até <span class="station-chip">51 St</span><br>
+              🚇 Linha <b>6</b> (sentido Downtown) → <span class="station-chip">33 St</span> (~8 min)<br>
+              🚶 ~5 min a pé até a <span class="address-chip">Empire State Building</span>
+            </div>
           </div>
         </div>
 
-        <div class="tl-row" data-step="tram">
-          <div class="tl-time"></div>
+        <div class="tl-row" data-step="empire">
+          <div class="tl-time">10h00</div>
           <div class="tl-node"><div class="dot"></div></div>
           <div class="tl-content">
             <div class="flow-stop">
-              <div class="flow-title">🚡 Roosevelt Island Tramway (Ida)</div>
-              <div class="flow-desc">Bonde aéreo histórico que cruza o East River oferecendo vista panorâmica dos arranha-céus de Midtown.</div>
-              <div class="flow-tip"><span>💡</span> Pague a catraca diretamente com o mesmo cartão/OMNY do metrô (mesmo valor da passagem).</div>
+              <div class="flow-time-label">🎟️ Entrada confirmada · 10h00</div>
+              <div class="flow-title">🏙️ Empire State Building</div>
+              <div class="flow-desc">Um dos observatórios mais famosos do mundo, com vista panorâmica de Manhattan.</div>
+              <div class="flow-tip"><span>💡</span> O primeiro horário da manhã costuma ter menos filas.</div>
             </div>
           </div>
         </div>
 
-        <div class="tl-row" data-step="tram">
+        <div class="tl-row" data-step="empire">
           <div class="tl-time"></div>
           <div class="tl-node"><div class="dot hollow"></div></div>
           <div class="tl-content">
-            <div class="flow-transit">🚡 ~4 min de travessia</div>
-          </div>
-        </div>
-
-        <div class="tl-row" data-step="rooseveltisland">
-          <div class="tl-time"></div>
-          <div class="tl-node"><div class="dot"></div></div>
-          <div class="tl-content">
-            <div class="flow-stop">
-              <div class="flow-title">🏝️ Roosevelt Island</div>
-              <div class="flow-desc">Ilha estreita e silenciosa no East River, a minutos do caos de Midtown. Não é lugar de atração — é de vista, café e respiro no meio do dia.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="tl-row" data-step="rooseveltisland">
-          <div class="tl-time"></div>
-          <div class="tl-node"></div>
-          <div class="tl-content">
-            <div class="substep-list">
-              <div class="substep">
-                <div class="substep-info">
-                  <span class="substep-time">~10 min</span>
-                  <span class="substep-name">📸 Mirante da Orla Oeste</span>
-                  <span class="substep-desc">Primeira vista aberta de Midtown, a poucos passos do bonde. Bom para se orientar: Manhattan fica à direita, e todo o percurso segue para o sul.</span>
-                </div>
-                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7575677,-73.9552396&query_place_id=ChIJeR-0PllZwokRXSIa1ViHhS0" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
-              </div>
-
-              <div class="substep-walk">🚶 ~4 min a pé (~300m) rumo sul</div>
-
-              <div class="substep">
-                <div class="substep-info">
-                  <span class="substep-time">~25 min</span>
-                  <span class="substep-name">☕ The Cafe at Cornell Tech</span>
-                  <span class="substep-desc">Mesas ao ar livre viradas para o skyline, preço de refeitório universitário. Terça abre às 8h.</span>
-                </div>
-                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7554148,-73.9562424&query_place_id=ChIJH7WViN5YwokRzFApV01r8C0" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
-              </div>
-
-              <div class="substep-walk">🚶 ~6 min descendo pelo calçadão da margem oeste</div>
-
-              <div class="substep">
-                <div class="substep-info">
-                  <span class="substep-time">~15 min</span>
-                  <span class="substep-name">🌇 Calçadão Oeste</span>
-                  <span class="substep-desc">De onde sai a foto clássica: a sede da ONU e o Chrysler Building enquadrados do outro lado do East River. Melhor ângulo logo ao sul da Cornell Tech.</span>
-                </div>
-                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7530,-73.9585" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
-              </div>
-
-              <div class="substep-walk">🚶 ~5 min (~400m) seguindo para a ponta sul</div>
-
-              <div class="substep">
-                <div class="substep-info">
-                  <span class="substep-time">~10 min</span>
-                  <span class="substep-name">🏚️ Renwick Ruin</span>
-                  <span class="substep-desc">Ruína do hospital de varíola de 1856, tomada por hera. Não se entra em dia nenhum — é cercada. Na terça a área ao redor fecha, então o enquadramento sai de mais longe.</span>
-                </div>
-                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7516543,-73.9595399&query_place_id=ChIJCSRB_x9ZwokRgumnsaRDjiA" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
-              </div>
-
-              <div class="substep-walk">🚶 ~15 min de volta ao norte — ou Red Bus, gratuito</div>
-
-              <div class="substep">
-                <div class="substep-info">
-                  <span class="substep-time">Desvio opcional</span>
-                  <span class="substep-name">🏛️ Blackwell House</span>
-                  <span class="substep-desc">Casarão de madeira de 1796, das casas mais antigas de NY. Só o térreo é visitável e o horário é irregular. Fica ao norte do bonde — só se sobrar tempo.</span>
-                </div>
-                <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.7603529,-73.9511041&query_place_id=ChIJ5w_70sRYwokRvLgq-DBfNcw" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="tl-row" data-step="rooseveltisland">
-          <div class="tl-time"></div>
-          <div class="tl-node"></div>
-          <div class="tl-content">
-            <div class="flow-tip"><span>⚠️</span><span class="tip-text">Terça é o dia fraco da ilha: o <b>FDR Four Freedoms Park</b>, memorial de granito de Louis Kahn na ponta sul, fica fechado. O calçadão da orla segue aberto e dá a mesma vista.</span></div>
-          </div>
-        </div>
-
-        <div class="tl-row" data-step="rooseveltisland">
-          <div class="tl-time"></div>
-          <div class="tl-node"></div>
-          <div class="tl-content">
-            <div class="flow-tip"><span>🗼</span><span class="tip-text">O farol da ponta norte aparece em muitas listas, mas fica a ~2,5 km na direção oposta. Não cabe nesse dia.</span></div>
-          </div>
-        </div>
-
-        <div class="tl-row" data-step="rooseveltisland">
-          <div class="tl-time"></div>
-          <div class="tl-node"><div class="dot hollow"></div></div>
-          <div class="tl-content">
-            <div class="flow-transit">🚡 ~4 min de travessia de volta a Manhattan</div>
-          </div>
-        </div>
-
-        <div class="tl-row" data-step="rooseveltisland">
-          <div class="tl-time"></div>
-          <div class="tl-node"><div class="dot hollow"></div></div>
-          <div class="tl-content">
-            <div class="flow-transit">🚶 ~10-12 min a pé (~800m) até a <span class="address-chip">UrbanSpace Vanderbilt</span></div>
+            <div class="flow-transit">🚶 ~12-15 min a pé (~1km) até a <span class="address-chip">UrbanSpace Vanderbilt</span></div>
           </div>
         </div>
 
