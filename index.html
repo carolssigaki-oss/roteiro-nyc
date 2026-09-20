@@ -1441,7 +1441,7 @@ const RESTO_DB = {
   "remi": {
     name: "☕ Remi Flower & Coffee",
     categoria: "Café", status:"parada", preco:13, slot:"cafe",
-    dia: 4,
+    dia: 2,
     regiao: "Midtown East · Lexington Ave",
     tipo: "Café & Floricultura",
     desc: "Uma cafeteria-floricultura ao mesmo tempo — você pede o café cercado de vasos e buquês frescos, num clima aconchegante e bem fotogênico.",
@@ -2172,7 +2172,9 @@ const STEPS_BY_DAY = {
       map:{ lat:40.755553, lng:-73.993031, placeId:"ChIJM3IUOK1ZwokRmgyn41pFrtE" } }
   ],
   "2": [
-    { key:"hotel-out", grupo:"casal", name:"Saída do hotel", description:"Roosevelt Island Tramway, via Lexington Av/53 St", chip:"station", node:"hollow" },
+    { key:"hotel-out", grupo:"casal", name:"Saída do hotel", description:"Remi Flower & Coffee, via Lexington Av/53 St", chip:"station", node:"hollow" },
+    { key:"remi", name:"☕ Café — Remi Flower", description:"Remi Flower & Coffee.", node:"solid",
+      map:{ lat:40.7537, lng:-73.9691 } },
     { key:"tram", name:"🚡 Roosevelt Island Tramway (Ida)", description:"Bonde aéreo histórico cruzando o East River.", node:"solid",
       map:{ lat:40.7612789, lng:-73.9641664, placeId:"ChIJfQDvGoxZwokRvzLRRApytgQ" } },
     { key:"rooseveltisland", name:"🏝️ Roosevelt Island", description:"Mirante, calçadão e o FDR Four Freedoms Park (aberto hoje).", node:"solid", duration:"~50 min",
@@ -2230,9 +2232,7 @@ const STEPS_BY_DAY = {
 };
 
 STEPS_BY_DAY["4"] = [
-  { key:"hotel-out", grupo:"casal", name:"Saída do hotel", description:"Remi Flower & Coffee, via Lexington Av/53 St", chip:"station", node:"hollow" },
-  { key:"cafe", name:"☕ Café — Remi Flower", description:"Remi Flower & Coffee.", node:"solid",
-    map:{ lat:40.7537, lng:-73.9691 } },
+  { key:"hotel-out", grupo:"casal", name:"Saída do hotel", description:"Empire State Building", chip:"address", node:"hollow" },
   { key:"empire", name:"🏙️ Empire State Building", description:"Um dos observatórios mais famosos do mundo.", node:"solid",
     map:{ lat:40.7484405, lng:-73.9856644, placeId:"ChIJaXQRs6lZwokRY6EFpJnhNNE" } },
   { key:"almoco", name:"🍔 Almoço — UrbanSpace", description:"UrbanSpace Vanderbilt.", node:"solid",
@@ -3352,9 +3352,53 @@ function renderDay2(){
             <div class="flow-transit">
               <b>Saída do Hotel</b><br>
               🚶 ~10 min a pé até <span class="station-chip">Times Sq–42 St</span><br>
-              🚇 Linha <b>E</b> (sentido Queens) → <span class="station-chip">Lexington Av/53 St</span> (~6 min)<br>
-              🚶 ~12 min a pé (~900m) subindo a 2nd Ave em linha reta
+              🚇 Linha <b>E</b> (sentido Queens) → <span class="station-chip">Lexington Av/53 St</span> (~6 min)
             </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="hotel-out">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~5 min a pé (~400m) até o <span class="address-chip">Remi Flower &amp; Coffee</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="remi">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">☕ Café</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="remi">
+          <div class="tl-time"></div>
+          <div class="tl-node"></div>
+          <div class="tl-content">
+            <div class="store-list">
+              <div class="store-row resto-trigger" data-resto="remi">
+                <div class="store-info">
+                  <span class="store-name">☕ Remi Flower &amp; Coffee</span>
+                  <span class="store-tag optional">toque para detalhes</span>
+                </div>
+                <span class="gastro-row-actions">
+                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.753691,-73.9690791&query_place_id=ChIJY4SOj-JYwokRRSfg82cBwM0" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
+                  <a class="ig-icon-btn" href="https://www.instagram.com/remi.nyc/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="remi">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~12 min a pé (~900m) subindo a 2nd Ave em linha reta</div>
           </div>
         </div>
 
@@ -4386,62 +4430,12 @@ function renderDay4(){
         <div class="route-line"></div>
 
         <div class="tl-row" data-step="hotel-out">
-          <div class="tl-time">09h00</div>
+          <div class="tl-time">09h30</div>
           <div class="tl-node"><div class="dot hollow"></div></div>
           <div class="tl-content">
             <div class="flow-transit">
               <b>Saída do Hotel</b><br>
-              🚶 ~10 min a pé (~700m) até <span class="station-chip">Times Sq–42 St</span><br>
-              🚇 Linha <b>E</b> (sentido Queens) → <span class="station-chip">Lexington Av/53 St</span> (~6 min)
-            </div>
-          </div>
-        </div>
-
-        <div class="tl-row" data-step="hotel-out">
-          <div class="tl-time"></div>
-          <div class="tl-node"><div class="dot hollow"></div></div>
-          <div class="tl-content">
-            <div class="flow-transit">🚶 ~5 min a pé (~400m) até o <span class="address-chip">Remi Flower &amp; Coffee</span></div>
-          </div>
-        </div>
-
-        <div class="tl-row" data-step="cafe">
-          <div class="tl-time"></div>
-          <div class="tl-node"><div class="dot"></div></div>
-          <div class="tl-content">
-            <div class="flow-stop">
-              <div class="flow-title">☕ Café</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="tl-row" data-step="cafe">
-          <div class="tl-time"></div>
-          <div class="tl-node"></div>
-          <div class="tl-content">
-            <div class="store-list">
-              <div class="store-row resto-trigger" data-resto="remi">
-                <div class="store-info">
-                  <span class="store-name">☕ Remi Flower &amp; Coffee</span>
-                  <span class="store-tag optional">toque para detalhes</span>
-                </div>
-                <span class="gastro-row-actions">
-                  <a class="maps-icon-btn" href="https://www.google.com/maps/search/?api=1&query=40.753691,-73.9690791&query_place_id=ChIJY4SOj-JYwokRRSfg82cBwM0" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>
-                  <a class="ig-icon-btn" href="https://www.instagram.com/remi.nyc/" target="_blank" rel="noopener" onclick="event.stopPropagation()">${IG_ICON_SVG}</a>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="tl-row" data-step="cafe">
-          <div class="tl-time"></div>
-          <div class="tl-node"><div class="dot hollow"></div></div>
-          <div class="tl-content">
-            <div class="flow-transit">
-              🚶 ~5 min a pé até <span class="station-chip">51 St</span><br>
-              🚇 Linha <b>6</b> (sentido Downtown) → <span class="station-chip">33 St</span> (~8 min)<br>
-              🚶 ~5 min a pé até a <span class="address-chip">Empire State Building</span>
+              🚶 ~10-12 min a pé (~850m) pela 34th St até a <span class="address-chip">5ª Avenida</span>.
             </div>
           </div>
         </div>
