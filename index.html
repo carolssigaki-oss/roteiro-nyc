@@ -2179,8 +2179,6 @@ const STEPS_BY_DAY = {
       map:{ lat:40.7612789, lng:-73.9641664, placeId:"ChIJfQDvGoxZwokRvzLRRApytgQ" } },
     { key:"rooseveltisland", name:"🏝️ Roosevelt Island", description:"Mirante, calçadão e o FDR Four Freedoms Park (aberto hoje).", node:"solid", duration:"~50 min",
       map:{ lat:40.7566, lng:-73.9558, placeId:"ChIJVwZ6u59ZwokRsSeIMKoUeZg" } },
-    { key:"zara34", name:"🛍️ Zara 34th", description:"Loja na 34th St, a caminho da 5ª Avenida.", node:"solid", duration:"20–30 min",
-      map:{ lat:40.7488, lng:-73.9878, placeId:"ChIJ4QozbalZwokR88tFRSL5lC8" } },
     { key:"cafe", name:"☕ Café — Blue Bottle", description:"Blue Bottle Coffee.", node:"solid",
       map:{ lat:40.7582086, lng:-73.9786889, placeId:"ChIJh8do2v5YwokRYPmXuTCIx-A" } },
     { key:"fifthave", name:"🛍️ 5ª Avenida", description:"Apple, Uniqlo e Saks no caminho.", node:"solid",
@@ -2197,6 +2195,8 @@ const STEPS_BY_DAY = {
       map:{ lat:40.7535367, lng:-73.9829529, placeId:"ChIJvbGg56pZwokRp_E3JbivnLQ" } },
     { key:"nypl", name:"📚 New York Public Library", description:"Uma das bibliotecas mais bonitas dos EUA.", node:"solid", duration:"20–30 min",
       map:{ lat:40.7531823, lng:-73.9822534, placeId:"ChIJqaiomQBZwokRTHOaUG7fUTs" } },
+    { key:"zara34", name:"🛍️ Zara 34th", description:"Loja na 34th St, a caminho da estação.", node:"solid", duration:"20–30 min",
+      map:{ lat:40.7488, lng:-73.9878, placeId:"ChIJ4QozbalZwokR88tFRSL5lC8" } },
     { key:"memorial911", name:"🕊️ 9/11 Memorial", description:"Homenagem solene no local exato das antigas Torres Gêmeas — área externa.", node:"solid", duration:"30–40 min",
       map:{ lat:40.7111026, lng:-74.0130975, placeId:"ChIJuywwGBpawokRCb31xeHV66I" } },
     { key:"memorial911museum", name:"🎟️ 9/11 Memorial Museum", description:"Visita interna ao museu — ingresso obrigatório.", node:"solid", duration:"1h30–2h",
@@ -3493,36 +3493,9 @@ function renderDay2(){
           <div class="tl-node"><div class="dot hollow"></div></div>
           <div class="tl-content">
             <div class="flow-transit">
-              🚶 ~12 min a pé (ou Red Bus, gratuito) até a <span class="station-chip">Roosevelt Island</span> (metrô)<br>
-              🚇 Linha <b>F</b> (sentido Manhattan) → <span class="station-chip">34 St–Herald Sq</span> (~12-15 min)
+              🚡 ~4 min de travessia de volta a Manhattan<br>
+              🚶 ~10-12 min a pé (~900m) até a <span class="address-chip">5ª Avenida</span>, na altura do Blue Bottle
             </div>
-          </div>
-        </div>
-
-        <div class="tl-row" data-step="zara34">
-          <div class="tl-time"></div>
-          <div class="tl-node"><div class="dot"></div></div>
-          <div class="tl-content">
-            <div class="flow-stop">
-              <div class="flow-title">🛍️ Zara 34th</div>
-              <div class="flow-desc">Loja grande de moda bem na Herald Square, a caminho da estação — boa pra uma parada rápida de compras logo depois do Empire State.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="tl-row" data-step="zara34">
-          <div class="tl-time"></div>
-          <div class="tl-node"><div class="dot hollow"></div></div>
-          <div class="tl-content">
-            <div class="flow-transit">🚇 Linha <b>N/R/W</b> (sentido Uptown) → <span class="station-chip">57 St–7 Av</span> (~8 min)</div>
-          </div>
-        </div>
-
-        <div class="tl-row" data-step="zara34">
-          <div class="tl-time"></div>
-          <div class="tl-node"><div class="dot hollow"></div></div>
-          <div class="tl-content">
-            <div class="flow-transit">🚶 ~3 min a pé (~234m) até o Blue Bottle</div>
           </div>
         </div>
 
@@ -3788,11 +3761,30 @@ function renderDay2(){
           <div class="tl-time"></div>
           <div class="tl-node"><div class="dot hollow"></div></div>
           <div class="tl-content">
-            <div class="flow-transit">🚶 ~8 min a pé (~600m) até <span class="station-chip">Times Sq–42 St</span></div>
+            <div class="flow-transit">🚶 ~10 min a pé (~800m) descendo até a <span class="address-chip">Zara 34th</span></div>
           </div>
         </div>
 
-        <div class="tl-row" data-step="nypl">
+        <div class="tl-row" data-step="zara34">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot"></div></div>
+          <div class="tl-content">
+            <div class="flow-stop">
+              <div class="flow-title">🛍️ Zara 34th</div>
+              <div class="flow-desc">Loja grande de moda bem na Herald Square, a caminho da estação — última parada de compras antes do metrô pro Downtown.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="zara34">
+          <div class="tl-time"></div>
+          <div class="tl-node"><div class="dot hollow"></div></div>
+          <div class="tl-content">
+            <div class="flow-transit">🚶 ~2 min a pé até <span class="station-chip">34 St–Penn Station</span></div>
+          </div>
+        </div>
+
+        <div class="tl-row" data-step="zara34">
           <div class="tl-time"></div>
           <div class="tl-node"><div class="dot hollow"></div></div>
           <div class="tl-content">
@@ -3800,7 +3792,7 @@ function renderDay2(){
           </div>
         </div>
 
-        <div class="tl-row" data-step="nypl">
+        <div class="tl-row" data-step="zara34">
           <div class="tl-time"></div>
           <div class="tl-node"><div class="dot hollow"></div></div>
           <div class="tl-content">
